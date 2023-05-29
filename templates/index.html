@@ -2,17 +2,39 @@
 <html>
 <head>
 	<title>Index Page</title>
+    
 </head>
+<style>
+    .message {
+            padding: 10px;
+            margin: 5px;
+            background-color: #f3f3f3
+        }
+</style>
 <body>
-	<center><h3>Change Request Form</h3></center>
-	<a href="/add_data">ADD</a>
+	<center><h3>Change Request Form</h3>
+        <form action="/" method="POST">
+            <label>Name</label><br>
+            <input type="text" name="username" placeholder="username..."><br>
+            <br>
+            <label>Summary</label><br>
+            <textarea rows="15" cols="60" name="summary" placeholder="Summary of request">
+            </textarea><br>
+            <button type="submit">Submit</button>
+        </form>
+    </center>
+	
 	<br>
-	<table>
+    <br>
+    <br>
+	<center><h3>Change Record List</h3>
+    <table>
 		<thead>
 			<th>Id</th>
 			<th>User Name</th>
 			<th>Summary</th>
 			<th>Date</th>
+            <th>Status</th>
 			<th>#</th>
 		</thead>
 		{% for data in profiles %}
@@ -20,10 +42,19 @@
 			<td>{{data.id}}</td>
 			<td>{{data.username}}</td>
 			<td>{{data.summary}}</td>
-			<td>{{data.created_at}}</td>
-			<td><a href="/delete/{{data.id}}" type="button">Delete</a></td>
+            <td>{{data.created_at}}</td>
+			<td>Ongoing</td>
+            <td><a href="/delete/{{data.id}}" type="button">Delete</a></td>
 		</tbody>
 		{% endfor%}
-	</table>
+	</table></center>
 </body>
 </html>
+
+
+<!-- 
+<textarea name="content"
+                  placeholder="Message content"
+                  rows="15"
+                  cols="60"
+                  >{{ request.form['content'] }}</textarea> -->

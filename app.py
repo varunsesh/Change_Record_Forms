@@ -35,17 +35,17 @@ class Profile(db.Model):
 		return f"Name : {self.username}, created_at: {self.created_at}, summary:{self.summary}"
 
 # function to render index page
-@app.route('/')
+@app.route('/', methods=["GET"])
 def index():
 	profiles = Profile.query.all()
 	return render_template('index.html', profiles=profiles)
 
-@app.route('/add_data')
-def add_data():
-	return render_template('add_profile.html')
+# @app.route('/add_data')
+# def add_data():
+# 	return render_template('add_profile.html')
 
 # function to add profiles
-@app.route('/add', methods=["POST"])
+@app.route('/', methods=["POST"])
 def profile():
 	# In this function we will input data from the
 	# form page and store it in our database. Remember
