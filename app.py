@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, migrate
 from sqlalchemy.sql import func
 
+
+
 app = Flask(__name__)
 app.debug = True
 
@@ -25,15 +27,16 @@ class Profile(db.Model):
 	# Age: Used to store the age of the user
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(20), unique=False, nullable=False)
-	title = db.Column(db.String(20), unique=False, nullable=False)
+	title = db.Column(db.String(100), unique=False, nullable=False)
 	summary = db.Column(db.String(500), unique=False, nullable=False)
+	status=db.Column(db.String(20), unique=False)
 	created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
 
 	# repr method represents how one object of this datatable
 	# will look like
 	def __repr__(self):
-		return f"Name : {self.username}, created_at: {self.created_at}, summary:{self.summary}"
+		return f"Name : {self.username}, created_at: {self.created_at}, summary:{self.title}"
 
 
 
@@ -85,6 +88,16 @@ def view(id):
 	return render_template('view.html', data=data)
 
 
+@app.route('/update', methods=["POST"])
+def update_status():
+    json_data=request.get_json()
+    print(json_data)
+    id=json_data['id']
+    data=Profile.query.get(id)
+    data.status=json_data['status']
+    print(data.status)
+    db.session.commit()
+    return redirect('/')
 
 if __name__ == '__main__':
 	app.run()

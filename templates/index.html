@@ -19,6 +19,23 @@
         padding: 10px 0;
         }
 </style>
+<script>
+    function myFunction(e, userID) {
+    //FIRST WE CAPTURE THE VALUE THAT THE USER INPUTS
+    let userInput = {id: userID, status: e.currentTarget.previousElementSibling.value}
+    
+    
+    //THEN WE SEND IT TO THE FLASK BACKEND USING AJAX (Fetch API)
+    fetch("/update", {
+    method: 'POST',
+    headers: {
+    "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userInput)
+    })
+    window.location.reload();
+}
+    </script>
 <body>
 	<center><h3>Change Request Form</h3>
         <form action="/" method="POST">
@@ -54,19 +71,25 @@
 			<td>{{data.username}}</td>
 			<td>{{data.title}}</td>
             <td>{{data.created_at}}</td>
-			<td>Ongoing</td>
+			<td id="statusID">{% if data.status is not none %}
+                {{data.status}}
+                {% else %}
+                    Unknown
+                {% endif %}
+            </td>
+            <td><div id="apt_2_modal">
+                <input id="apt_2_text"></input>
+                <button onclick="myFunction(event, '{{data.id}}')" >Update Status</button>
+              </div></td>
+                <!-- <a onclick="myFunction(event)">Update Status</a></td> -->
             <td><a href="/view/{{data.id}}" type="button">View</a></td>
             <td><a href="/delete/{{data.id}}" type="button">Delete</a></td>
 		</tbody>
 		{% endfor%}
 	</table></center>
 </body>
+
 </html>
 
 
-<!-- 
-<textarea name="content"
-                  placeholder="Message content"
-                  rows="15"
-                  cols="60"
-                  >{{ request.form['content'] }}</textarea> -->
+<!-- <a href="javascript:myFunction()" type="button"></a> -->
