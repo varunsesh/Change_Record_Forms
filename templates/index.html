@@ -17,6 +17,9 @@
             <label>Name</label><br>
             <input type="text" name="username" placeholder="username..."><br>
             <br>
+            <label>Title</label><br>
+            <input type="text" name="title" placeholder="title..."><br>
+            <br>
             <label>Summary</label><br>
             <textarea rows="15" cols="60" name="summary" placeholder="Summary of request">
             </textarea><br>
@@ -32,18 +35,19 @@
 		<thead>
 			<th>Id</th>
 			<th>User Name</th>
-			<th>Summary</th>
+            <th>Title</th>
 			<th>Date</th>
             <th>Status</th>
-			<th>#</th>
+            <th>#</th>
 		</thead>
 		{% for data in profiles %}
 		<tbody>
 			<td>{{data.id}}</td>
 			<td>{{data.username}}</td>
-			<td>{{data.summary}}</td>
+			<td>{{data.title}}</td>
             <td>{{data.created_at}}</td>
 			<td>Ongoing</td>
+            <td><a href="/view/{{data.id}}" type="button">View</a></td>
             <td><a href="/delete/{{data.id}}" type="button">Delete</a></td>
 		</tbody>
 		{% endfor%}

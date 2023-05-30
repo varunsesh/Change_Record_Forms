@@ -25,6 +25,7 @@ class Profile(db.Model):
 	# Age: Used to store the age of the user
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(20), unique=False, nullable=False)
+	title = db.Column(db.String(20), unique=False, nullable=False)
 	summary = db.Column(db.String(500), unique=False, nullable=False)
 	created_at = db.Column(db.DateTime(timezone=True),
                            server_default=func.now())
@@ -33,6 +34,8 @@ class Profile(db.Model):
 	# will look like
 	def __repr__(self):
 		return f"Name : {self.username}, created_at: {self.created_at}, summary:{self.summary}"
+
+
 
 # function to render index page
 @app.route('/', methods=["GET"])
@@ -52,13 +55,14 @@ def profile():
 	# that inside the get the name should exactly be the same
 	# as that in the html input fields
 	username = request.form.get("username")
+	title = request.form.get("title")
 	summary = request.form.get("summary")
 	
 
 	# create an object of the Profile class of models and
 	# store data as a row in our datatable
-	if username != '' and summary != '':
-		p = Profile(username=username, summary=summary)
+	if username != '' and summary != '' and title != '':
+		p = Profile(username=username, title=title, summary=summary)
 		db.session.add(p)
 		db.session.commit()
 		return redirect('/')
@@ -74,6 +78,13 @@ def erase(id):
 	db.session.delete(data)
 	db.session.commit()
 	return redirect('/')
+
+@app.route('/view/<int:id>', methods=["GET"])
+def view(id):
+	data = Profile.query.get(id)
+	return render_template('view.html', data=data)
+
+
 
 if __name__ == '__main__':
 	app.run()
