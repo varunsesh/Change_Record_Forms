@@ -1,16 +1,13 @@
-from flask import Flask, request, redirect
+from flask import Blueprint, request, redirect
 from flask.templating import render_template
 from flask_sqlalchemy import SQLAlchemy
-from ..db import Profile
-from ..config import Config
-from . import app
+from app.models import Profile
+from app import db
 
-
-
-config = Config(app)
+view = Blueprint("view", __name__)
 
 # function to render index page
-@app.route('/', methods=["GET"])
+@view.route('/', methods=["GET"])
 def index():
 	profiles = Profile.query.all()
 	return render_template('index.html', profiles=profiles)
@@ -20,7 +17,7 @@ def index():
 # 	return render_template('add_profile.html')
 
 # function to add profiles
-@app.route('/', methods=["POST"])
+@view.route('/', methods=["POST"])
 def profile():
 	# In this function we will input data from the
 	# form page and store it in our database. Remember
@@ -41,7 +38,7 @@ def profile():
 	else:
 		return redirect('/')
 
-@app.route('/delete/<int:id>')
+@view.route('/delete/<int:id>')
 def erase(id):
 	
 	# deletes the data on the basis of unique id and
@@ -51,13 +48,15 @@ def erase(id):
 	db.session.commit()
 	return redirect('/')
 
-@app.route('/view/<int:id>', methods=["GET"])
-def view(id):
+
+@view.route('/view/<int:id>', methods=["GET"])
+def view_cr(id):
 	data = Profile.query.get(id)
 	return render_template('view.html', data=data)
 
 
-@app.route('/update', methods=["POST"])
+
+@view.route('/update', methods=["POST"])
 def update_status():
     json_data=request.get_json()
     print(json_data)
@@ -67,6 +66,3 @@ def update_status():
     print(data.status)
     db.session.commit()
     return redirect('/')
-
-if __name__ == '__main__':
-	app.run()
