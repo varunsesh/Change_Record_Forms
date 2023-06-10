@@ -31,3 +31,10 @@ def index():
          profile_list.append(profile_json)
     
     return jsonify(profile_list), 200
+
+
+@view.route('/delete')
+def delete_record():
+     data = request.get_json()
+     
+     return {}
