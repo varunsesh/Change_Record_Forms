@@ -23,7 +23,19 @@ export class FormView extends Component {
         
     }
 
-
+    deleteRecord =(id)=>{
+        console.log(id);
+        axios.post("http://localhost:5000/delete", {"id":id})
+        .then(response =>{
+                console.log(response.data)
+        })
+        .catch(error=>{
+            console.log(error)
+        });
+        window.location.reload();
+    }
+            
+    
   render() {
     return (
       <div>
@@ -45,6 +57,7 @@ export class FormView extends Component {
                <td>{item.title}</td>
                <td>{item.date}</td>
                <td>None</td>
+               <td><button onClick={()=>this.deleteRecord(item.id)}>Delete</button></td>
              </tr>
            ))}
             

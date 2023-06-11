@@ -33,8 +33,15 @@ def index():
     return jsonify(profile_list), 200
 
 
-@view.route('/delete')
+@view.route('/delete', methods=["POST"])
 def delete_record():
-     data = request.get_json()
+     if(request.method=="POST"):
+        data = request.get_json()
+        id = Profile.query.get(data["id"])
+        db.session.delete(id)
+        db.session.commit()
+        print(data)     
      
+     
+
      return {}
