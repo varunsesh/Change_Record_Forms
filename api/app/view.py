@@ -4,16 +4,20 @@ from flask_sqlalchemy import SQLAlchemy
 from app.models import Profile
 from app import db
 import jwt
+import json
 
 
 view = Blueprint("view", __name__)
 
-@view.route('/', methods=['GET', 'POST'])
+@view.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def index():
-    
+   
+    if request.method=='OPTIONS':
+         return {}, 200
     if request.method=='POST':
+        print(f"request type = {request.method}")
         data = request.get_json()
-        print(data)
+        data = json.loads(data)
         username = data['username']
         title = data['title']
         summary = data['summary']
@@ -33,8 +37,10 @@ def index():
     return jsonify(profile_list), 200
 
 
-@view.route('/delete', methods=["POST"])
+@view.route('/delete', methods=["POST", "OPTIONS"])
 def delete_record():
+     if request.method=='OPTIONS':
+          return {}, 200
      if(request.method=="POST"):
         data = request.get_json()
         id = Profile.query.get(data["id"])

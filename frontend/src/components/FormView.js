@@ -25,14 +25,24 @@ export class FormView extends Component {
 
     deleteRecord =(id)=>{
         console.log(id);
-        axios.post("http://localhost:5000/delete", {"id":id})
+        
+        axios.post("http://localhost:5000/delete", JSON.stringify({"id":id}), {
+          headers:{
+            'Content-Type':'application/json', 
+            'Access-Control-Allow-Origin': '*'
+          }
+        })
         .then(response =>{
                 console.log(response.data)
         })
         .catch(error=>{
             console.log(error)
         });
-        window.location.reload();
+       window.location.reload();
+    }
+
+    updateStatus = (id)=>{
+
     }
             
     
@@ -57,6 +67,7 @@ export class FormView extends Component {
                <td>{item.title}</td>
                <td>{item.date}</td>
                <td>None</td>
+               <td><button onClick={()=>this.updateStatus(item.id)}>Update Status</button></td>
                <td><button onClick={()=>this.deleteRecord(item.id)}>Delete</button></td>
              </tr>
            ))}
