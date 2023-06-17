@@ -2,6 +2,7 @@ from flask import Blueprint, request, redirect, jsonify
 from flask.templating import render_template
 from flask_sqlalchemy import SQLAlchemy
 from app.models import Profile
+from flask_cors import cross_origin
 from app import db
 import jwt
 import json
@@ -11,13 +12,13 @@ view = Blueprint("view", __name__)
 
 @view.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def index():
-   
     if request.method=='OPTIONS':
-         return {}, 200
-    if request.method=='POST':
+         return {'message':'OPTIONS received'}
+    print(f"request type = {request.method}")
+    if request.method=='POST' :
         print(f"request type = {request.method}")
         data = request.get_json()
-        data = json.loads(data)
+        print(type(data))
         username = data['username']
         title = data['title']
         summary = data['summary']
@@ -25,7 +26,7 @@ def index():
                 p = Profile(username=username, title=title, summary=summary)
                 db.session.add(p)
                 db.session.commit()
-                return {"db": "Updated"}, 200
+                return jsonify({"db": "Updated"}), 200
     profiles = Profile.query.all()
     profile_json = {}
     #{"id":id, "username":username, ...}
@@ -40,7 +41,7 @@ def index():
 @view.route('/delete', methods=["POST", "OPTIONS"])
 def delete_record():
      if request.method=='OPTIONS':
-          return {}, 200
+          return {'message':'OPTIONS received'}
      if(request.method=="POST"):
         data = request.get_json()
         id = Profile.query.get(data["id"])

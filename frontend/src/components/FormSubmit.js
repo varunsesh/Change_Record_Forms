@@ -1,5 +1,6 @@
 import React, { Component, useState, useEffect } from 'react'; 
 import axios from 'axios';
+import FormView from './FormView';
 
 export class FormSubmit extends Component {
     constructor(props) {
@@ -24,31 +25,23 @@ export class FormSubmit extends Component {
 
     handleSubmit = (e)=>{
       e.preventDefault();
-      // axios({
-      //   url: "http://localhost:5000/",
-      //   data: JSON.stringify(this.state),
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/vnd.api+json',
-      //     Accept: 'application/vnd.api+json',
-      //   },
-      // })
+     
       const data = JSON.stringify(this.state)
       console.log(data)
-      axios.post("http://localhost:5000/", JSON.stringify(data), {
+      axios.post("http://localhost:5000/", data, {
         headers:{
         // Overwrite Axios's automatically set Content-Type
-        'Content-Type': 'application/json', 
-        'Access-Control-Allow-Origin': '*'
+        'Content-Type': 'application/json'
       }
     })
       .then(response =>{
         console.log(response.data)
+        this.setState({username:"", title:"", summary:""})
       })
       .catch(error=>{
         console.log(error)
       })
-      window.location.reload();
+      
     }
 
   render() {
