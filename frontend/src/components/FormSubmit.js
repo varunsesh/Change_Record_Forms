@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from 'react'; 
-import axios from 'axios';
 import FormView from './FormView';
+import api from './api'
 
 export class FormSubmit extends Component {
     constructor(props) {
@@ -28,7 +28,7 @@ export class FormSubmit extends Component {
      
       const data = JSON.stringify(this.state)
       console.log(data)
-      axios.post("http://localhost:5000/", data, {
+      api.post("/", data, {
         headers:{
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -37,11 +37,11 @@ export class FormSubmit extends Component {
       .then(response =>{
         console.log(response.data)
         this.setState({username:"", title:"", summary:""})
+        this.props.onFormSubmit();
       })
       .catch(error=>{
         console.log(error)
       })
-      
     }
 
   render() {

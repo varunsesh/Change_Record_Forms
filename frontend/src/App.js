@@ -3,14 +3,16 @@ import './App.css';
 import {Title, Forms, View} from './components/CR_Forms'
 import FormSubmit from './components/FormSubmit'
 import FormView from './components/FormView';
+import FormParent from './components/FormParent';
+
 
 function App() {
   return (
     <div className="App">
       <Title />
-      <FormSubmit/>
-      <br /><br />
-      <center><FormView /></center>
+      
+      <br />
+      <center><FormParent /></center>
       
     </div>
   );

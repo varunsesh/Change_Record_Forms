@@ -12,8 +12,8 @@ view = Blueprint("view", __name__)
 
 @view.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def index():
-    if request.method=='OPTIONS':
-         return {'message':'OPTIONS received'}
+#     if request.method=='OPTIONS':
+#          return {'message':'OPTIONS received'}
     print(f"request type = {request.method}")
     if request.method=='POST' :
         print(f"request type = {request.method}")
@@ -40,8 +40,8 @@ def index():
 
 @view.route('/delete', methods=["POST", "OPTIONS"])
 def delete_record():
-     if request.method=='OPTIONS':
-          return {'message':'OPTIONS received'}
+     # if request.method=='OPTIONS':
+     #      return {'message':'OPTIONS received'}
      if(request.method=="POST"):
         data = request.get_json()
         id = Profile.query.get(data["id"])
