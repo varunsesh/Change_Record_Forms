@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 
-function DropdownMenu({ onItemSelected }) {
+function DropdownMenu(props, { onItemSelected }) {
   const [selectedItem, setSelectedItem] = useState(null);
 
 
@@ -17,7 +17,16 @@ function DropdownMenu({ onItemSelected }) {
       }),
       
   };
+
+  const handleChange = (selectedItem) => {
+    // Perform any local handling of the selected item if needed
+    console.log('Selected item:', selectedItem);
   
+    // Call the parent's onChange function with the selected value
+    props.onChange(selectedItem.value);
+  };
+  
+ 
   const menuItems = [
     { value: 'Item1', label: 'In Production', color:'green' },
     { value: 'Item2', label: 'Under Dev', color:'orange' },
@@ -26,7 +35,7 @@ function DropdownMenu({ onItemSelected }) {
 
   return (
     <div className="dropdown-container">
-      <Select options={menuItems} placeholder="Select an Item" styles={customStyles} />
+      <Select options={menuItems} placeholder="Select an Item" styles={customStyles} onChange={handleChange}/>
     </div>
   );
 }

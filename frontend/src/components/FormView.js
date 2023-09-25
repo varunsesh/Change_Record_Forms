@@ -9,7 +9,8 @@ export class FormView extends Component {
     
       this.state = {
          formSubmitted:false,
-         data:[]
+         data:[],
+         selectedItemValue:""
       }
     }
 
@@ -52,6 +53,8 @@ export class FormView extends Component {
     }
 
     updateStatus = (id)=>{
+      
+      console.log(`Look who's here = ${id}`);
 
     }
 
@@ -59,13 +62,7 @@ export class FormView extends Component {
 
     }
 
-    options = [
-      {value:"green", label:"In Production"},
-      {value:"yellow", label:"Under Development"},
-      {value:"red", label:"Under Review for Development"},
-      {value:"grey", label:"Discarded"}
-    ];
-  
+     
   handleSubmit=(props)=>{
     console.log(props);
     this.setState({formsubmitted:true});
@@ -97,7 +94,7 @@ export class FormView extends Component {
                {/* <td><button onClick={()=>this.updateStatus(item.id)}>Update</button></td> */}
                
                {/* <td><button onClick={()=>this.viewSummary(item.id)}>View</button></td> */}
-               <td><DropdownMenu  /></td>
+               <td><DropdownMenu onChange={()=>this.updateStatus(item.id)} /></td>
                <td><button onClick={()=>this.deleteRecord(item.id)}>Delete</button></td>
                
              </tr>

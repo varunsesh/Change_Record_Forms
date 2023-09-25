@@ -10,6 +10,7 @@ app.debug = True
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['JSON_SORT_KEYS'] = False
+app.config['CORS_HEADERS'] = 'Content-Type'
 # Creating an SQLAlchemy instance
 
 db = SQLAlchemy(app)
