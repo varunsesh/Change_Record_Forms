@@ -52,9 +52,21 @@ export class FormView extends Component {
       
     }
 
-    updateStatus = (id)=>{
+    updateStatus = (id, menuItem)=>{
       
-      console.log(`Look who's here = ${id}`);
+      console.log(`Look who's here id = ${id}; menuItem=${menuItem}`);
+      api.post("/update", {"id":id, "status":menuItem}, {
+        headers:{
+          'Content-Type':'application/json', 
+        }
+      })
+      .then(response =>{
+              console.log(response.data)
+              api.get("/").then(response=>{this.setState({data:response.data})}).catch(err=>{console.log(err)})
+      })
+      .catch(error=>{
+          console.log(error)
+      });
 
     }
 
@@ -94,7 +106,8 @@ export class FormView extends Component {
                {/* <td><button onClick={()=>this.updateStatus(item.id)}>Update</button></td> */}
                
                {/* <td><button onClick={()=>this.viewSummary(item.id)}>View</button></td> */}
-               <td><DropdownMenu onChange={()=>this.updateStatus(item.id)} /></td>
+               <td>{item.status}</td>
+               <td><DropdownMenu onChange={(menuItem)=>this.updateStatus(item.id, menuItem)} /></td>
                <td><button onClick={()=>this.deleteRecord(item.id)}>Delete</button></td>
                
              </tr>

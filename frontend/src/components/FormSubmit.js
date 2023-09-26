@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react'; 
 import FormView from './FormView';
 import api from './api'
+import CustomRichTextEditor from './CustomRichTextEditor';
 
 export class FormSubmit extends Component {
     constructor(props) {
@@ -15,7 +16,7 @@ export class FormSubmit extends Component {
     }
 
     handleChange = (e)=>{
-      this.setState({
+        this.setState({
         [e.target.name] : e.target.value
       
       })
@@ -27,6 +28,7 @@ export class FormSubmit extends Component {
       e.preventDefault();
      
       const data = JSON.stringify(this.state)
+      console.log`Summary = ${this.state.summary}`;
       console.log(data)
       api.post("/", data, {
         headers:{
@@ -56,8 +58,9 @@ export class FormSubmit extends Component {
         </label><br /><br />
         <label>Summary
         <br />
-        <textarea name="summary" cols="50" rows="20" value={this.state.summary} onChange={(e)=>this.handleChange(e)}>
-        </textarea>
+        {/* <textarea name="summary" cols="50" rows="20" value={this.state.summary} onChange={(e)=>this.handleChange(e)}>
+        </textarea> */}
+        <CustomRichTextEditor value={this.state.summary} onChange={(e)=>this.handleChange(e)}/>
         </label><br/><br/>
         <input type="submit"></input>
         

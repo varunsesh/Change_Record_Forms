@@ -22,8 +22,9 @@ def index():
         username = data['username']
         title = data['title']
         summary = data['summary']
+        status = 'Review'
         if username != '' and summary != '' and title != '':
-                p = Profile(username=username, title=title, summary=summary)
+                p = Profile(username=username, title=title, summary=summary, status=status)
                 db.session.add(p)
                 db.session.commit()
                 return jsonify({"db": "Updated"}), 200
@@ -32,7 +33,7 @@ def index():
     #{"id":id, "username":username, ...}
     profile_list = []
     for profile in profiles:
-         profile_json = {"id":profile.id, "username":profile.username, "title":profile.title, "summary":profile.summary, "date":profile.created_at}
+         profile_json = {"id":profile.id, "username":profile.username, "title":profile.title, "summary":profile.summary, "date":profile.created_at, "status":profile.status}
          profile_list.append(profile_json)
     
     return jsonify(profile_list), 200
@@ -52,3 +53,18 @@ def delete_record():
      
 
      return {}
+
+
+
+@view.route('/update', methods=["POST", "OPTIONS"])
+def update():
+    if request.method =="OPTIONS":
+        return {},200
+    if(request.method=="POST"):
+        data = request.get_json()
+        print(data)
+        db_entry = Profile.query.get(data["id"])
+        db_entry.status = data['status']
+        db.session.commit()
+        
+        return{"message":"Successfully updated"}

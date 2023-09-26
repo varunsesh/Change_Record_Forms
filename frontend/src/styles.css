@@ -1,0 +1,15 @@
+.down-arrow {
+  width: 10px;
+  height: 10px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  transform: rotate(45deg);
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.custom-editor {
+    width: 600px;
+    height: 400px; /* Set the desired width here */
+  }
