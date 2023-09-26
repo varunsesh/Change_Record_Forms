@@ -10,7 +10,7 @@ export class FormSubmit extends Component {
       this.state = {
         username:"",
         title:"",
-        summary:"",         
+        summaryContent:"",
       }    
 
     }
@@ -23,14 +23,25 @@ export class FormSubmit extends Component {
             
     }
 
+    handleEditorContentChange = (content) => {
+      console.log("Content from handleEditorContentChange:", content);
+      this.setState({ summaryContent: content });
+    };
 
     handleSubmit = (e)=>{
       e.preventDefault();
-     
-      const data = JSON.stringify(this.state)
-      console.log`Summary = ${this.state.summary}`;
-      console.log(data)
-      api.post("/", data, {
+      console.log("Summary Content from handleSubmit:", this.state.summaryContent);
+      // Now you have the editor content and embedded images as base64 strings
+      // You can include them in the formData as needed
+      const formData = {
+        summary: this.state.summaryContent,
+        username: this.state.username,
+        title: this.state.title
+        // Add other form fields here if necessary
+      };
+  
+
+      api.post("/", formData, {
         headers:{
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -38,13 +49,15 @@ export class FormSubmit extends Component {
     })
       .then(response =>{
         console.log(response.data)
-        this.setState({username:"", title:"", summary:""})
+        this.setState({username:"", title:"", summaryContent:""})
         this.props.onFormSubmit();
       })
       .catch(error=>{
         console.log(error)
       })
     }
+  
+
 
   render() {
     return (
@@ -60,7 +73,7 @@ export class FormSubmit extends Component {
         <br />
         {/* <textarea name="summary" cols="50" rows="20" value={this.state.summary} onChange={(e)=>this.handleChange(e)}>
         </textarea> */}
-        <CustomRichTextEditor value={this.state.summary} onChange={(e)=>this.handleChange(e)}/>
+        <CustomRichTextEditor  onContentChange={this.handleEditorContentChange} value={this.state.summaryContent} />
         </label><br/><br/>
         <input type="submit"></input>
         

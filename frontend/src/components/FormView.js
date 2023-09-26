@@ -2,6 +2,8 @@ import React, { Component, useState, useEffect } from 'react';
 import api from './api';
 import FormSubmit from './FormSubmit';
 import DropdownMenu from "./Dropdown";
+import PopupCard from './PopupCard';
+import "../styles.css";
 
 export class FormView extends Component {
     constructor(props) {
@@ -10,7 +12,10 @@ export class FormView extends Component {
       this.state = {
          formSubmitted:false,
          data:[],
-         selectedItemValue:""
+         selectedItemValue:"", 
+         isPopupVisible: false, // State to control the visibility of the pop-up card
+         selectedRowData: null, // Store data for the selected row
+
       }
     }
 
@@ -70,10 +75,21 @@ export class FormView extends Component {
 
     }
 
-    viewSummary = (id)=>{
+    // Function to show the pop-up card when a row is clicked
+  showPopup = (rowData) => {
+    this.setState({
+      isPopupVisible: true,
+      selectedRowData: rowData,
+    });
+  };
 
-    }
-
+  // Function to hide the pop-up card
+  hidePopup = () => {
+    this.setState({
+      isPopupVisible: false,
+      selectedRowData: null,
+    });
+  };
      
   handleSubmit=(props)=>{
     console.log(props);
@@ -97,7 +113,7 @@ export class FormView extends Component {
             </thead>
             <tbody>
             {this.state.data.map((item) => (
-             <tr key={item.id}>
+             <tr key={item.id} className="highlighted-row" onClick={()=>this.showPopup(item)}>
                <td>{item.id}</td>
                <td>{item.username}</td>
                <td>{item.title}</td>
@@ -116,7 +132,14 @@ export class FormView extends Component {
             </tbody>
     
         </table>
-        
+        {this.state.isPopupVisible && (
+        <div className="popup-overlay" onClick={this.hidePopup}>
+          <div className="popup-card">
+            {/* <button onClick={this.hidePopup}>Close</button> */}
+            <PopupCard data={this.state.selectedRowData} onClose={this.hidePopup} />
+          </div>
+        </div>
+        )}
         
     </div>
 

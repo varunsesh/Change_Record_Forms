@@ -18,7 +18,7 @@ def index():
     if request.method=='POST' :
         print(f"request type = {request.method}")
         data = request.get_json()
-        print(type(data))
+        print((data))
         username = data['username']
         title = data['title']
         summary = data['summary']
