@@ -1,0 +1,67 @@
+/* CSS for the table */
+.table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  /* Style the dropdown container */
+  .dropdown-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Style the button to trigger the dropdown */
+  .dropdown-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Style the dropdown menu */
+  .dropdown-menu {
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .dropdown-menu li {
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  /* Style for the dropdown menu items */
+  .dropdown-menu li:hover {
+    background-color: #ddd;
+  }
+  
+  /* Styling for active menu item */
+  .dropdown-menu li.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  /* Position the dropdown menu under the button */
+  .dropdown-menu.hidden {
+    display: none;
+  }
+  
+  .dropdown-container:hover .dropdown-menu {
+    display: block;
+  }
+  
+

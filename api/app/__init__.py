@@ -2,12 +2,15 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.debug = True
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['JSON_SORT_KEYS'] = False
+app.config['CORS_HEADERS'] = 'Content-Type'
 # Creating an SQLAlchemy instance
 
 db = SQLAlchemy(app)
