@@ -59,7 +59,6 @@ export class FormView extends Component {
 
     updateStatus = (id, menuItem)=>{
       
-      console.log(`Look who's here id = ${id}; menuItem=${menuItem}`);
       api.post("/update", {"id":id, "status":menuItem}, {
         headers:{
           'Content-Type':'application/json', 
@@ -77,6 +76,7 @@ export class FormView extends Component {
 
     // Function to show the pop-up card when a row is clicked
   showPopup = (rowData) => {
+    
     this.setState({
       isPopupVisible: true,
       selectedRowData: rowData,
@@ -101,29 +101,28 @@ export class FormView extends Component {
     return (
       <div>
         <br/><br/>
-        <table>
+        <table className="nice-table">
             <thead>
             <tr>
              <th>CR_ID</th>
              <th>Name</th>
              <th>Title</th>
-             <th>Date</th>
+             {/* <th>Date</th> */}
              <th>Status</th>
+             <th>Select Status</th>
+             <th>Actions</th>
            </tr>
             </thead>
             <tbody>
             {this.state.data.map((item) => (
-             <tr key={item.id} className="highlighted-row" onClick={()=>this.showPopup(item)}>
-               <td>{item.id}</td>
-               <td>{item.username}</td>
-               <td>{item.title}</td>
-               <td>{item.date}</td>
-               {/* <td>None</td> */}
-               {/* <td><button onClick={()=>this.updateStatus(item.id)}>Update</button></td> */}
+             <tr key={item.id}>
                
-               {/* <td><button onClick={()=>this.viewSummary(item.id)}>View</button></td> */}
-               <td>{item.status}</td>
-               <td><DropdownMenu onChange={(menuItem)=>this.updateStatus(item.id, menuItem)} /></td>
+               <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.id}</div></td>
+               <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.username}</div></td>
+               <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.title}</div></td>
+               
+               <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.status}</div></td>
+               <td><DropdownMenu onItemSelected={(menuItem)=>this.updateStatus(item.id, menuItem)}/> </td>
                <td><button onClick={()=>this.deleteRecord(item.id)}>Delete</button></td>
                
              </tr>

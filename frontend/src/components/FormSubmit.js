@@ -28,6 +28,8 @@ export class FormSubmit extends Component {
       this.setState({ summaryContent: content });
     };
 
+    
+
     handleSubmit = (e)=>{
       e.preventDefault();
       console.log("Summary Content from handleSubmit:", this.state.summaryContent);
