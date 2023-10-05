@@ -13,6 +13,7 @@ function DropdownMenu(props) {
     { value: 'Prod', label: 'In Production', color: 'green' },
     { value: 'Dev', label: 'Under Dev', color: 'orange' },
     { value: 'Review', label: 'Under Review for Dev', color: 'red' },
+    { value: 'Discarded', label: 'Discarded', color: 'grey' },
   ];
 
   return (
