@@ -4,6 +4,7 @@ import FormSubmit from './FormSubmit';
 import DropdownMenu from "./Dropdown";
 import PopupCard from './PopupCard';
 import "../styles.css";
+import { initDB, Stores, getStoreData, deleteData, updateStatusData } from '../DbStores/models.ts';
 
 export class FormView extends Component {
     constructor(props) {
@@ -14,22 +15,25 @@ export class FormView extends Component {
          data:[],
          selectedItemValue:"", 
          isPopupVisible: false, // State to control the visibility of the pop-up card
-         selectedRowData: null, // Store data for the selected row
-
+         selectedRowData: null, // Store data for the selected row, 
+         isDBReady: false, 
+         setIsDBReady: false 
       }
     }
 
     componentDidMount(){
-        api.get("/")
-        .then(response => {
-            this.setState({data:response.data})   
-        })
-        .catch(error => {
-            console.log(error)
-        });
+      //Intialise db
+      const status = initDB();
+      this.setState({setIsDBReady:status});
+     
+      const users = getStoreData(Stores.Users);
+      
+      users.then((e)=>{this.setState({data:e})});
     }
 
     componentDidUpdate(prevProps){
+      const status = initDB();
+      const users = getStoreData(Stores.Users);
       console.log`prevProps.formsubmitted = ${prevProps.formSubmitted}`;
       if(this.props.formSubmitted !== prevProps.formSubmitted){
         api.get('/').then(response=>console.log(response)).catch(error=>console.log(error));
@@ -40,37 +44,14 @@ export class FormView extends Component {
     }
     
     deleteRecord =(id)=>{
-        console.log(id);
-        
-        api.post("/delete", JSON.stringify({"id":id}), {
-          headers:{
-            'Content-Type':'application/json', 
-          }
-        })
-        .then(response =>{
-                console.log(response.data)
-                api.get("/").then(response=>{this.setState({data:response.data})}).catch(err=>{console.log(err)})
-        })
-        .catch(error=>{
-            console.log(error)
-        });
+      console.log(id);
+      deleteData(Stores.Users, id);
+      window.location.reload();
       
     }
 
     updateStatus = (id, menuItem)=>{
-      
-      api.post("/update", {"id":id, "status":menuItem}, {
-        headers:{
-          'Content-Type':'application/json', 
-        }
-      })
-      .then(response =>{
-              console.log(response.data)
-              api.get("/").then(response=>{this.setState({data:response.data})}).catch(err=>{console.log(err)})
-      })
-      .catch(error=>{
-          console.log(error)
-      });
+      updateStatusData(id, Stores.Users, menuItem);      
 
     }
 

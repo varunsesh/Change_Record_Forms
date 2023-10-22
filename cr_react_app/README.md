@@ -69,6 +69,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
-- https://legacy.reactjs.org/docs/thinking-in-react.html
-- https://www.taniarascia.com/getting-started-with-react/
-- https://legacy.reactjs.org/docs/getting-started.html#learn-react
+
+## References
+- Indexed db: https://dev.to/esponges/indexeddb-your-offline-and-serverless-db-in-your-browser-with-react-3hm7
+- https://javascript.info/indexeddb

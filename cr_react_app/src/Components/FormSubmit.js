@@ -2,6 +2,8 @@ import React, { Component, useState, useEffect } from 'react';
 import FormView from './FormView';
 import api from './api'
 import CustomRichTextEditor from './CustomRichTextEditor';
+import { Stores, addData } from '../DbStores/models.ts';
+
 
 export class FormSubmit extends Component {
     constructor(props) {
@@ -15,6 +17,8 @@ export class FormSubmit extends Component {
 
     }
 
+    
+
     handleChange = (e)=>{
         this.setState({
         [e.target.name] : e.target.value
@@ -25,7 +29,7 @@ export class FormSubmit extends Component {
 
     handleEditorContentChange = (content) => {
       console.log("Content from handleEditorContentChange:", content);
-      this.setState({ summaryContent: content });
+      this.setState({ summaryContent: content }, ()=>{console.log(content)});
     };
 
     
@@ -35,13 +39,19 @@ export class FormSubmit extends Component {
       console.log("Summary Content from handleSubmit:", this.state.summaryContent);
       // Now you have the editor content and embedded images as base64 strings
       // You can include them in the formData as needed
+      
       const formData = {
         summary: this.state.summaryContent,
         username: this.state.username,
         title: this.state.title
         // Add other form fields here if necessary
       };
-  
+      
+      try {
+        const res =  addData(Stores.Users, formData);
+      } catch (err) {
+        console.log(err);
+      }
 
       api.post("/", formData, {
         headers:{
@@ -59,8 +69,7 @@ export class FormSubmit extends Component {
       })
     }
   
-
-
+   
   render() {
     return (
         <form onSubmit={this.handleSubmit}>
@@ -75,7 +84,7 @@ export class FormSubmit extends Component {
         <br />
         {/* <textarea name="summary" cols="50" rows="20" value={this.state.summary} onChange={(e)=>this.handleChange(e)}>
         </textarea> */}
-        <CustomRichTextEditor  onContentChange={this.handleEditorContentChange} value={this.state.summaryContent} />
+        <CustomRichTextEditor onContentChange={this.handleEditorContentChange} value={this.state.summaryContent} />
         </label><br/><br/>
         <input type="submit"></input>
         

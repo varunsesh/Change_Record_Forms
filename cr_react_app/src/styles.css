@@ -135,3 +135,10 @@
   /* overflow-y: auto; */
   width: 100%;
 }
+
+.demoPage1{
+  background-color: green;
+}
+.demoPage2{
+  background-color: orange;
+}
