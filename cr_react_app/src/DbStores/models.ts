@@ -1,7 +1,7 @@
 
 let request: IDBOpenDBRequest;
 let db: IDBDatabase;
-let version = 1;
+let version = 2;
 let db_name = 'CR_DB';
 
 export interface User {
@@ -20,10 +20,11 @@ export enum Stores {
 export const initDB = (): Promise<boolean> => {
   return new Promise((resolve) => {
     // open the connection
-    request = indexedDB.open(db_name);
+    request = indexedDB.open(db_name, version);
 
-    request.onupgradeneeded = () => {
-      db = request.result;
+    request.onupgradeneeded = (e) => {
+      console.log("upgrade event called");
+      db = e.target.result;
       // if the data object store doesn't exist, create it
       if (!db.objectStoreNames.contains(Stores.Users)) {
         console.log('Creating users store');
@@ -32,7 +33,7 @@ export const initDB = (): Promise<boolean> => {
       // no need to resolve here
     };
 
-    request.onsuccess = async (e) => {
+    request.onsuccess = (e) => {
       db = e.target.result;
       version = db.version;
       console.log('request.onsuccess - initDB', version);

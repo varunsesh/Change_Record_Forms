@@ -11,7 +11,7 @@ function App() {
       <Title />
       <br />
       <center><FormParent /></center>
-     {/* <Home /> */}
+    
     </div>
   );
 }

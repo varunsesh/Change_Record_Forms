@@ -24,11 +24,13 @@ export class FormView extends Component {
     componentDidMount(){
       //Intialise db
       const status = initDB();
-      this.setState({setIsDBReady:status});
-     
+      console.log(status);
+      this.setState({setIsDBReady:status.response});
+
       const users = getStoreData(Stores.Users);
-      
       users.then((e)=>{this.setState({data:e})});
+      
+      
     }
 
     componentDidUpdate(prevProps){
