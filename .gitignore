@@ -3,4 +3,4 @@ cr_react_app/node_modules/*
 cr_react_app/build/*
 cr_desktop/dist/*
 cr_desktop/node_modules/*
-
+cr_desktop/build/*
