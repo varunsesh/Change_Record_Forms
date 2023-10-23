@@ -1,7 +1,7 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path');
-const { start } = require('repl');
-const url = require('url');
+
+
 const isDev = app.isPackaged ? false : require('electron-is-dev');
 
 const createWindow = () => {
@@ -14,8 +14,8 @@ const createWindow = () => {
           webSecurity: false // Enable loading of local resources via file://
         } });
       console.log(startUrl);
-      console.log(`file://${path.join(__dirname, "./build/index.html")}`);
-
+      
+      mainWindow.maximize();
       mainWindow.loadURL(startUrl);
       mainWindow.on('closed', function () {
         mainWindow = null;

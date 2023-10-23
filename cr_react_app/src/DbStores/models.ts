@@ -1,7 +1,7 @@
 
 let request: IDBOpenDBRequest;
 let db: IDBDatabase;
-let version = 2;
+let version = 3;
 let db_name = 'CR_DB';
 
 export interface User {
@@ -75,7 +75,7 @@ export const addData = <T>(storeName: string, data: T): Promise<T|string|null> =
 
 export const getStoreData = <T>(storeName: string): Promise<T[]> => {
   return new Promise((resolve) => {
-    request = indexedDB.open(db_name);
+    request = indexedDB.open(db_name, version);
 
     request.onsuccess = (e) => {
       console.log('request.onsuccess - getAllData');

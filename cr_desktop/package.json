@@ -2,11 +2,34 @@
   "name": "cr_desktop",
   "version": "1.0.0",
   "description": "Change Record Desktop Application",
-  "main": "main.js",
+  "main": "electron.js",
   "scripts": {
     "start": "set ELECTRON_START_URL=http://localhost:3000 && electron .",
-    "package": "electron-builder build --win ",
+    "package": "electron-builder --win ",
+    "electron-pack": "electron-builder -c.extraMetadata.main=electron.js --win",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build":
+  {
+    "appId": "com.example.my-electron-app",
+    "productName": "Change record form",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "electron.js"
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
   "author": "Varun Seshadrinathan",
   "license": "ISC",
