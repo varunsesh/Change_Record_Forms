@@ -2,7 +2,8 @@ import React, { Component, useState, useEffect } from 'react';
 import FormView from './FormView';
 import api from './api'
 import CustomRichTextEditor from './CustomRichTextEditor';
-import { Stores, addData } from '../DbStores/models.ts';
+import { Stores, addData, getStoreData, initDB } from '../DbStores/models.ts';
+import "../styles.css";
 
 
 export class FormSubmit extends Component {
@@ -13,6 +14,7 @@ export class FormSubmit extends Component {
         username:"",
         title:"",
         summaryContent:"",
+        reload:false
       }    
 
     }
@@ -32,7 +34,6 @@ export class FormSubmit extends Component {
       this.setState({ summaryContent: content }, ()=>{console.log(content)});
     };
 
-    
 
     handleSubmit = (e)=>{
       e.preventDefault();
@@ -49,25 +50,19 @@ export class FormSubmit extends Component {
       
       try {
         const res =  addData(Stores.Users, formData);
+        if(res){setTimeout(()=>{
+          window.location.reload(); 
+       },1000);};
+
       } catch (err) {
         console.log(err);
       }
-
-      api.post("/", formData, {
-        headers:{
-        // Overwrite Axios's automatically set Content-Type
-        'Content-Type': 'application/json'
+      finally{
+        this.setState({reload:true})
       }
-    })
-      .then(response =>{
-        console.log(response.data)
-        this.setState({username:"", title:"", summaryContent:""})
-        this.props.onFormSubmit();
-      })
-      .catch(error=>{
-        console.log(error)
-      })
-    }
+
+      
+  }
   
    
   render() {
@@ -78,7 +73,8 @@ export class FormSubmit extends Component {
         </label>
         <br /><br />
         <label>Title<br/>
-        <textarea name="title" cols="50" rows="5" value={this.state.title} onChange={(e)=>this.handleChange(e)}></textarea>
+        {/* <textarea name="title" cols="50" rows="5" value={this.state.title} onChange={(e)=>this.handleChange(e)}></textarea> */}
+        <input className="inputField" name="title"  value={this.state.title} onChange={(e)=>this.handleChange(e)}></input>
         </label><br /><br />
         <label>Summary
         <br />
@@ -86,7 +82,7 @@ export class FormSubmit extends Component {
         </textarea> */}
         <CustomRichTextEditor onContentChange={this.handleEditorContentChange} value={this.state.summaryContent} />
         </label><br/><br/>
-        <input type="submit"></input>
+        <input className='button button1' type="submit"></input>
         
     </form>
     )

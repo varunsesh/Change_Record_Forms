@@ -11,10 +11,12 @@ export class FormParent extends Component {
       }
     }
 
-    handleSubmit = ()=>{
+    handleSubmit = (e)=>{
         this.setState(prevState=>(
             {formSubmitted:!prevState.formSubmitted}
         ), ()=>{console.log`state = ${this.state.formSubmitted}`})
+        const res = e.target.result;
+        console.log(`result from parent = ${res}`);
     }
 
   render() {

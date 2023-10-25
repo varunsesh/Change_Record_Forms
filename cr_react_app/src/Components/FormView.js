@@ -5,6 +5,7 @@ import DropdownMenu from "./Dropdown";
 import PopupCard from './PopupCard';
 import "../styles.css";
 import { initDB, Stores, getStoreData, deleteData, updateStatusData } from '../DbStores/models.ts';
+import {saveAs} from 'file-saver';
 
 export class FormView extends Component {
     constructor(props) {
@@ -47,14 +48,23 @@ export class FormView extends Component {
     
     deleteRecord =(id)=>{
       console.log(id);
-      deleteData(Stores.Users, id);
+      deleteData(Stores.Users, id)
       window.location.reload();
+      
       
     }
 
     updateStatus = (id, menuItem)=>{
-      updateStatusData(id, Stores.Users, menuItem);      
+      if(updateStatusData(id, Stores.Users, menuItem)){
+        setTimeout(()=>{
+          window.location.reload(); 
+       },1000)}
+            
 
+    }
+
+    editRecord = (id)=>{
+      console.log(`Editing record with id = ${id}`);
     }
 
     // Function to show the pop-up card when a row is clicked
@@ -79,11 +89,27 @@ export class FormView extends Component {
     this.setState({formsubmitted:true});
     console.log`state updated`;
   }
+
+  importDB = ()=>{
+    console.log("importing the DB");
+  }
+  exportDB = ()=>{
+    console.log(`exporting entire DB`);
+    const users = getStoreData(Stores.Users);
+   
+    users.then((e)=>{
+      const result = JSON.stringify(e);
+      const download = new Blob([result], {type: 'text/plain;charset=utf-8'});
+      saveAs(download, "db.json");
+    });
+  }
     
   render() {
     return (
       <div>
         <br/><br/>
+        <button className=' button button1' type='button' onClick={this.exportDB}>Export</button>
+        <button className='button button1' type='button' onClick={this.importDB}>Import</button>
         <table className="nice-table">
             <thead>
             <tr>
@@ -106,8 +132,9 @@ export class FormView extends Component {
                
                <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.status}</div></td>
                <td><DropdownMenu onItemSelected={(menuItem)=>this.updateStatus(item.id, menuItem)}/> </td>
-               <td><button onClick={()=>this.deleteRecord(item.id)}>Delete</button></td>
-               
+               <td><div><button className='button button0' onClick={()=>this.deleteRecord(item.id)}>Delete</button>
+               <button className='button button0' onClick={()=>this.editRecord(item.id)}>Edit</button>
+               </div></td>
              </tr>
            ))}
             
@@ -115,9 +142,8 @@ export class FormView extends Component {
     
         </table>
         {this.state.isPopupVisible && (
-        <div className="popup-overlay" onClick={this.hidePopup}>
+        <div className="popup-overlay">
           <div className="popup-card">
-            {/* <button onClick={this.hidePopup}>Close</button> */}
             <PopupCard data={this.state.selectedRowData} onClose={this.hidePopup} />
           </div>
         </div>

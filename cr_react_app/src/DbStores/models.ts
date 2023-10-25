@@ -1,7 +1,7 @@
 
 let request: IDBOpenDBRequest;
 let db: IDBDatabase;
-let version = 3;
+let version = 4;
 let db_name = 'CR_DB';
 
 export interface User {
@@ -51,9 +51,9 @@ export const addData = <T>(storeName: string, data: T): Promise<T|string|null> =
   return new Promise((resolve) => {
     let id  = null;
     request = indexedDB.open(db_name, version);
-    request.onsuccess = () => {
+    request.onsuccess = (e) => {
       console.log('request.onsuccess - addData', data);
-      db = request.result;
+      db = e.target.result;
       const tx = db.transaction(storeName, 'readwrite');
       const store = tx.objectStore(storeName);
       tx.oncomplete=event=>resolve(id);
