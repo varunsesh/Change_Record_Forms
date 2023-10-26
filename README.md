@@ -6,6 +6,7 @@ This is a simple application that logs change requests submitted by the user. Th
 # Instructions to Deploy
 ## React Frontend: 
 - npm start
+  The app runs on localhost:3000.
 ## Desktop app:
 ### Dev mode: 
 - From cr_desktop root folder: npm start
