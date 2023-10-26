@@ -50,9 +50,10 @@ export const initDB = (): Promise<boolean> => {
 export const addData = <T>(storeName: string, data: T): Promise<T|string|null> => {
   return new Promise((resolve) => {
     let id  = null;
+    ///console.log(`addData = ${data}`);
     request = indexedDB.open(db_name, version);
     request.onsuccess = (e) => {
-      console.log('request.onsuccess - addData', data);
+      //console.log('request.onsuccess - addData', data);
       db = e.target.result;
       const tx = db.transaction(storeName, 'readwrite');
       const store = tx.objectStore(storeName);

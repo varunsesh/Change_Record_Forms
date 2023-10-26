@@ -4,8 +4,9 @@ import FormSubmit from './FormSubmit';
 import DropdownMenu from "./Dropdown";
 import PopupCard from './PopupCard';
 import "../styles.css";
-import { initDB, Stores, getStoreData, deleteData, updateStatusData } from '../DbStores/models.ts';
+import { initDB, Stores, getStoreData, deleteData, updateStatusData, addData } from '../DbStores/models.ts';
 import {saveAs} from 'file-saver';
+
 
 export class FormView extends Component {
     constructor(props) {
@@ -18,7 +19,7 @@ export class FormView extends Component {
          isPopupVisible: false, // State to control the visibility of the pop-up card
          selectedRowData: null, // Store data for the selected row, 
          isDBReady: false, 
-         setIsDBReady: false 
+         setIsDBReady: false, 
       }
     }
 
@@ -90,9 +91,6 @@ export class FormView extends Component {
     console.log`state updated`;
   }
 
-  importDB = ()=>{
-    console.log("importing the DB");
-  }
   exportDB = ()=>{
     console.log(`exporting entire DB`);
     const users = getStoreData(Stores.Users);
@@ -103,13 +101,28 @@ export class FormView extends Component {
       saveAs(download, "db.json");
     });
   }
+
+  importDB = (e)=>{
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = (e) => {
+      const importData = JSON.parse(e.target.result);
+      for (let dat in importData){
+        addData(Stores.Users, importData[dat]).then((e)=>{ this.setState((prevState) => ({data: [...prevState.data, e]}));});
+      }
+     
+    };
+  
+
+
+  }
     
   render() {
     return (
       <div>
         <br/><br/>
         <button className=' button button1' type='button' onClick={this.exportDB}>Export</button>
-        <button className='button button1' type='button' onClick={this.importDB}>Import</button>
+        <input type="file" className='button button1' onChange={this.importDB} Import/>
         <table className="nice-table">
             <thead>
             <tr>
