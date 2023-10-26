@@ -5,7 +5,7 @@ This is a simple application that logs change requests submitted by the user. Th
 
 # Instructions to Deploy
 ## React Frontend: npm start
-## Desktop app:
+- Desktop app:
 ### Dev mode: 
 - From cr_desktop root folder: npm start
 - From cr_react_app: npm start
