@@ -1,11 +1,11 @@
 import React, { Component, useState, useEffect } from 'react';
 import api from './api';
-import FormSubmit from './FormSubmit';
 import DropdownMenu from "./Dropdown";
 import PopupCard from './PopupCard';
 import "../styles.css";
-import { initDB, Stores, getStoreData, deleteData, updateStatusData, addData } from '../DbStores/models.ts';
+import { initDB, Stores, getStoreData, deleteData, updateStatusData, addData, updateStoreData } from '../DbStores/models.ts';
 import {saveAs} from 'file-saver';
+import CustomRichTextEditor from './CustomRichTextEditor.js';
 
 
 export class FormView extends Component {
@@ -20,6 +20,8 @@ export class FormView extends Component {
          selectedRowData: null, // Store data for the selected row, 
          isDBReady: false, 
          setIsDBReady: false, 
+         isEditorShow: false, 
+         
       }
     }
 
@@ -64,10 +66,48 @@ export class FormView extends Component {
 
     }
 
-    editRecord = (id)=>{
-      console.log(`Editing record with id = ${id}`);
+    editRecord = (item)=>{
+      this.showEditor(item);
     }
 
+  //Function to show rich text editor with data when edit is clicked
+  showEditor=(data)=>{
+    this.setState({
+      isEditorShow:true,
+      selectedRowData: data,
+    })
+  }
+
+  handleEditorContentChange = (content, id) => {
+    console.log(content);
+    console.log(id); 
+    var data = {
+      "id":id, 
+      "name":this.state.selectedRowData.username,
+      "summary":content,
+      "title": this.state.selectedRowData.title,
+      "status":this.state.selectedRowData.status,
+    }
+    console.log(data);
+    this.setState({selectedRowData:data});
+  };
+
+  updateRecord = (data)=>{
+    console.log(data);
+    if(updateStoreData(data.id, Stores.Users, data.summary)){
+      setTimeout(()=>{
+        window.location.reload(); 
+     },1000)}
+
+  }
+  
+  hideEditor=(data)=>{
+    console.log("On update...");
+    this.setState({
+      isEditorShow:false, 
+    })
+    this.updateRecord(this.state.selectedRowData);
+  }
     // Function to show the pop-up card when a row is clicked
   showPopup = (rowData) => {
     
@@ -146,7 +186,7 @@ export class FormView extends Component {
                <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.status}</div></td>
                <td><DropdownMenu onItemSelected={(menuItem)=>this.updateStatus(item.id, menuItem)}/> </td>
                <td><div><button className='button button0' onClick={()=>this.deleteRecord(item.id)}>Delete</button>
-               <button className='button button0' onClick={()=>this.editRecord(item.id)}>Edit</button>
+               <button className='button button0' onClick={()=>this.editRecord(item)}>Edit</button>
                </div></td>
              </tr>
            ))}
@@ -161,7 +201,13 @@ export class FormView extends Component {
           </div>
         </div>
         )}
-        
+         {this.state.isEditorShow && (
+        <div className="popup-overlay">
+          <div className="popup-card">
+            <CustomRichTextEditor data={this.state.selectedRowData} onContentChange={this.handleEditorContentChange} editMode={this.state.isEditorShow} onClose={this.hideEditor} />
+          </div>
+        </div>
+        )}        
     </div>
 
     )

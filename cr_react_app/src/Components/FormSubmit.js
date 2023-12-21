@@ -14,7 +14,8 @@ export class FormSubmit extends Component {
         username:"",
         title:"",
         summaryContent:"",
-        reload:false
+        reload:false,
+        editMode:false
       }    
 
     }
@@ -68,7 +69,7 @@ export class FormSubmit extends Component {
   render() {
     return (
         <form onSubmit={this.handleSubmit}>
-        <label>Username<br/>
+        <label>Requester<br/>
         <input name="username" type="text" value = {this.state.username} onChange={(e)=>this.handleChange(e)} ></input>
         </label>
         <br /><br />
@@ -80,7 +81,7 @@ export class FormSubmit extends Component {
         <br />
         {/* <textarea name="summary" cols="50" rows="20" value={this.state.summary} onChange={(e)=>this.handleChange(e)}>
         </textarea> */}
-        <CustomRichTextEditor onContentChange={this.handleEditorContentChange} value={this.state.summaryContent} />
+        <CustomRichTextEditor data={this.editMode} onContentChange={this.handleEditorContentChange} value={this.state.summaryContent} />
         </label><br/><br/>
         <input className='button button1' type="submit"></input>
         

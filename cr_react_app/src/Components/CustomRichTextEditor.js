@@ -4,17 +4,33 @@ import ImageUploader from "quill-image-uploader";
 import 'react-quill/dist/quill.snow.css'; // Import the styles for the editor
 import '../styles.css' ;
 import { resizeFile } from 'react-image-file-resizer';
+import Button from 'react-bootstrap/Button'
 
 
-function CustomRichTextEditor({ onContentChange }) {
+function CustomRichTextEditor({ onContentChange, onClose, data, editMode }) {
   const [editorHtml, setEditorHtml] = useState('');
   const [base64Images, setBase64Images] = useState([]);
 
-
+  
+  const showData = ()=>{
+    console.log("Update component");
+    console.log(editMode);
+    const summary = editMode ? data.summary:"";
+    console.log(data.summary);
+    setEditorHtml(summary);
+  }
+  
   const handleEditorChange = (html) => {
-    setEditorHtml(html);
-    onContentChange(html);
+    console.log("Edit Mode " + editMode);
+    // console.log(html);
+    {
+      setEditorHtml(html);
+      onContentChange(html, data.id);
+    }
+    
+    
   };
+
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -62,9 +78,12 @@ function CustomRichTextEditor({ onContentChange }) {
       <ReactQuill theme="snow" 
         value={editorHtml}
         onChange={handleEditorChange}
+        onFocus={showData}
         modules={modules}
         formats={formats}
       />
+      <br></br>
+      {editMode && <Button onClick={onClose}>Update</Button>}
     </div>
   );
 }
