@@ -5,6 +5,7 @@ let version = 4;
 let db_name = 'CR_DB';
 
 export interface User {
+  project: string;
   id: string;
   name: string;
   summary: string;
@@ -147,4 +148,40 @@ export const updateStatusData = (key: string, storeName: string, status:string):
       // }
     };
   });
+};
+
+
+export const updateStoreData = (key:string, storeName:string, summary:string):Promise<boolean>=>{
+  return new Promise((resolve) => {
+    // again open the connection
+    request = indexedDB.open(db_name, version);
+    
+    request.onsuccess = (e) => {
+      console.log('request.onsuccess - updateData', key);
+      db = e.target.result;
+      const tx = db.transaction(storeName, 'readwrite');
+      
+      const store = tx.objectStore(storeName);
+      
+      const res = store.get(key);
+      res.onsuccess = (e)=>{
+        var o, data = e.target.result;
+        data.summary = summary;
+        store.put(data);
+        resolve(true);
+      };
+      res.onerror = ()=>{resolve(false);}
+      
+
+
+      // // add listeners that will resolve the Promise
+      // res.onsuccess = () => {
+      //   resolve(true);
+      // };
+      // res.onerror = () => {
+      //   resolve(false);
+      // }
+    };
+  });
+
 };
