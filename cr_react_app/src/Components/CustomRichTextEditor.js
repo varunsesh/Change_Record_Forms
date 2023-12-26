@@ -16,16 +16,23 @@ function CustomRichTextEditor({ onContentChange, onClose, data, editMode }) {
     console.log("Update component");
     console.log(editMode);
     const summary = editMode ? data.summary:"";
-    console.log(data.summary);
+    //console.log(data.summary);
     setEditorHtml(summary);
   }
   
   const handleEditorChange = (html) => {
     console.log("Edit Mode " + editMode);
     // console.log(html);
+    
     {
       setEditorHtml(html);
-      onContentChange(html, data.id);
+      if(editMode){
+        onContentChange(html, data.id);
+      }
+      else{
+        onContentChange(html);
+      }
+      
     }
     
     

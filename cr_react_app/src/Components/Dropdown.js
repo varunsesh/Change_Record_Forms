@@ -11,6 +11,7 @@ function DropdownMenu(props) {
 
   const menuItems = [
     { value: 'Prod', label: 'In Production', color: 'green' },
+    { value: 'in UAT', label: 'UAT server', color: 'cyan' },
     { value: 'Dev', label: 'Under Dev', color: 'orange' },
     { value: 'Review', label: 'Under Review for Dev', color: 'red' },
     { value: 'Discarded', label: 'Discarded', color: 'grey' },
