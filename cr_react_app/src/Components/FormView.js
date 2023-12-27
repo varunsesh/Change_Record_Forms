@@ -33,8 +33,7 @@ export class FormView extends Component {
 
       const users = getStoreData(Stores.Users);
       users.then((e)=>{this.setState({data:e})});
-      
-      
+     
     }
 
     componentDidUpdate(prevProps){

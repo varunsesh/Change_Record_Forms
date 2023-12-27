@@ -1,4 +1,4 @@
-import {React, useEffect} from 'react'
+import {React, useEffect, useState} from 'react'
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 
@@ -6,10 +6,18 @@ import Button from 'react-bootstrap/Button';
 
 const HomePage = (props) => {
 
+ const [createForm, setCreateForm] = useState(false);
+
 
     const handleClick = ()=>{
         props.setPjt(true);
         console.log("Clicked here");
+    }
+
+    const newForm = ()=>{
+      setCreateForm(true);
+      console.log("new form");
+      console.log(props);
     }
 
   return (
@@ -25,12 +33,12 @@ const HomePage = (props) => {
             Choose Project
           </Dropdown.Toggle>
                <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1" onClick={handleClick}>Pristine Connect</Dropdown.Item>
+            <Dropdown.Item onClick={handleClick}>Pristine Connect</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
         </div>
         <br />
-        <Button>+ Create New Form</Button>
+        <Button onClick={newForm}> + Create New Form</Button>
     </div>
   )
 }

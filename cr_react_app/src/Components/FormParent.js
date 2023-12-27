@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import FormSubmit  from './FormSubmit';
+import ChangeRecordForm  from './ChangeRecordForm';
 import FormView from './FormView';
 
 
@@ -23,7 +23,7 @@ export class FormParent extends Component {
   render() {
     return (
       <div>
-        <FormSubmit onFormSubmit={this.handleSubmit}/>
+        <ChangeRecordForm onFormSubmit={this.handleSubmit}/>
         <FormView formSubmitted={this.state.formSubmitted}/>
     </div>
     )

@@ -1,28 +1,22 @@
 import logo from './logo.svg';
 import './App.css';
-import {Title} from './Components/TitleManager'
 import FormParent from './Components/FormParent';
-import BasicExample from './Components/CustomNavBar';
+import NavBar from './Components/CustomNavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './Components/HomePage';
 import { useState } from 'react';
+import ProjectForm from './Components/ProjectForm';
 
-
-function App() {
-  const [pjt, setPjt] = useState(false);
-
+function App({pjt}) {
+const [project, setPjt] = useState('');
+const projects=['Pristine Connect'];
 
 
   return (
     <div className="App">
-      {/* <BasicExample setPjt={setPjt}/>
-      {(!pjt) &&
-      <HomePage setPjt={setPjt}/>
-      } */}
-      <br />
-      {/* {(pjt)&& */}
-      <center><FormParent /></center>
-      {/* } */}
+      <NavBar></NavBar>
+    <ProjectForm/>
+    <FormParent/>
     </div>
   );
 }

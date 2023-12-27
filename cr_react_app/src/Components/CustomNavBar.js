@@ -3,8 +3,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import React, { useEffect, useState } from 'react';
+//import { Link } from 'react-router-dom';
 
-function BasicExample(props) {
+function NavBar(props) {
   const [label, setLabel]=useState('');
   
   useEffect(()=>{
@@ -16,7 +17,7 @@ function BasicExample(props) {
   }
 
   const goHome = ()=>{
-    props.setPjt(false);
+    props.setPjt(label);
   }
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -36,4 +37,4 @@ function BasicExample(props) {
   );
 }
 
-export default BasicExample;
+export default NavBar;

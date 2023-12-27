@@ -1,7 +1,7 @@
 
 let request: IDBOpenDBRequest;
 let db: IDBDatabase;
-let version = 4;
+let version = 5;
 let db_name = 'CR_DB';
 
 export interface User {
