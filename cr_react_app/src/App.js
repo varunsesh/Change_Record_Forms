@@ -7,16 +7,20 @@ import HomePage from './Components/HomePage';
 import { useState } from 'react';
 import ProjectForm from './Components/ProjectForm';
 
-function App({pjt}) {
-const [project, setPjt] = useState('');
-const projects=['Pristine Connect'];
+function App() {
+const [project, setProject] = useState('1');
 
+const onSelect = (data)=>{
+  console.log(data);
+  setProject(data);
+
+}
 
   return (
     <div className="App">
-      <NavBar></NavBar>
-    <ProjectForm/>
-    <FormParent/>
+    <NavBar onSelect={onSelect}></NavBar>
+    {/* <ProjectForm/> */}
+    <FormParent data={project}/>
     </div>
   );
 }

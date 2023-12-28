@@ -1,5 +1,5 @@
 const dbName = "CR_DB";
-const dbVersion = 1;
+const dbVersion = 2;
 const projectStoreName = "projects";
 const changeRecordStoreName = "changeRecords";
 
@@ -10,7 +10,7 @@ async function openDB() {
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      db.createObjectStore(projectStoreName, { keyPath: "project_id" });
+      db.createObjectStore(projectStoreName, { keyPath: "project_id", autoIncrement: true });
       const changeRecordStore = db.createObjectStore(changeRecordStoreName, { keyPath: "cr_id", autoIncrement: true });
       changeRecordStore.createIndex("project_id", "project_id", { unique: false });
     };

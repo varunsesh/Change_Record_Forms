@@ -23,8 +23,8 @@ export class FormParent extends Component {
   render() {
     return (
       <div>
-        <ChangeRecordForm onFormSubmit={this.handleSubmit}/>
-        <FormView formSubmitted={this.state.formSubmitted}/>
+        <ChangeRecordForm data={this.props} onFormSubmit={this.handleSubmit}/>
+        {/* <FormView formSubmitted={this.state.formSubmitted}/> */}
     </div>
     )
   }

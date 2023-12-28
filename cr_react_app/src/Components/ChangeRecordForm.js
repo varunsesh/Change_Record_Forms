@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { createChangeRecord, getProjects } from '../DbStores/models_new'; // Import functions from models.js
 import CustomRichTextEditor from './CustomRichTextEditor';
 
-function ChangeRecordForm() {
-  const [projects, setProjects] = useState([]);
+function ChangeRecordForm(props) {
   const [selectedProject, setSelectedProject] = useState('');
   const [requesterName, setRequesterName] = useState('');
   const [title, setTitle] = useState('');
@@ -11,23 +10,14 @@ function ChangeRecordForm() {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const projects = await getProjects();
-        setProjects(projects);
-        if (projects.length > 0) {
-          setSelectedProject(projects[0].project_id);
-        }
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-      }
-    };
-
-    fetchProjects();
-  }, []);
+}, [selectedProject]);
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(props.data.data);
+    console.log(selectedProject);
+
     const newRecord = {
       project_id: selectedProject,
       requester_name: requesterName,
@@ -35,6 +25,7 @@ function ChangeRecordForm() {
       summary,
     };
     try {
+      console.log(newRecord); 
       await createChangeRecord(newRecord);
       alert('Change record added successfully');
       // Reset form fields
@@ -46,25 +37,14 @@ function ChangeRecordForm() {
     }
   };
 
-  const handleEditorContentChange = ()=>{
-
+  const handleEditorContentChange = (data)=>{
+    setSelectedProject(props.data.data);
+    setSummary(data);
+    console.log(data);
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Select Project:
-        <select
-          value={selectedProject}
-          onChange={(e) => setSelectedProject(e.target.value)}
-        >
-          {projects.map((project) => (
-            <option key={project.project_id} value={project.project_id}>
-              {project.project_name}
-            </option>
-          ))}
-        </select>
-      </label>
       <br></br>
       <label>
         Requester Name

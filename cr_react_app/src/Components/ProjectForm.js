@@ -12,18 +12,20 @@ function ProjectForm({onProjectAdd}) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!projectName.trim()) {
       alert('Project name is required');
       return;
     }
+ 
     const newProject = {
-      project_id: Date.now(), // A simple way to generate a unique ID
+      // A simple way to generate a unique ID
       project_name: projectName,
       project_description: projectDescription,
     };
     try {
       await createProject(newProject);
-      onProjectAdd(); // Callback to update the list of projects in the parent component
+      //onProjectAdd(); // Callback to update the list of projects in the parent component
       setProjectName('');
       setProjectDescription('');
     } catch (error) {
