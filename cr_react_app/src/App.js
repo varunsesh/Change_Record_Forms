@@ -7,8 +7,11 @@ import HomePage from './Components/HomePage';
 import { useState } from 'react';
 import ProjectForm from './Components/ProjectForm';
 
+
 function App() {
 const [project, setProject] = useState('1');
+const [newForm, setNewForm] = useState(false);
+const [homePage, setHomePage] = useState(true);
 
 const onSelect = (data)=>{
   console.log(data);
@@ -16,11 +19,27 @@ const onSelect = (data)=>{
 
 }
 
+const onNewForm = (e)=>{
+  setHomePage(false);
+  setNewForm(true);
+}
+
+const onProjectAdd = (e)=>{
+  setHomePage(true);
+  setNewForm(false);
+}
+
+
+
+
+
   return (
     <div className="App">
-    <NavBar onSelect={onSelect}></NavBar>
-    {/* <ProjectForm/> */}
-    <FormParent data={project}/>
+    
+    <NavBar goHome={onProjectAdd} onSelect={onSelect}></NavBar>
+    {homePage && <HomePage onNewForm={onNewForm}/>}
+    {newForm && <ProjectForm onProjectAdd={onProjectAdd}/> }
+    {/* <FormParent data={project}/> */}
     </div>
   );
 }

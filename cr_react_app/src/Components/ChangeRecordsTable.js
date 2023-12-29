@@ -1,14 +1,15 @@
 import React, { Component, useState, useEffect } from 'react';
-import api from './api';
-import DropdownMenu from "./Dropdown";
-import PopupCard from './PopupCard';
+import api from './api.js';
+import DropdownMenu from "./Dropdown.js";
+import PopupCard from './PopupCard.js';
 import "../styles.css";
 import { initDB, Stores, getStoreData, deleteData, updateStatusData, addData, updateStoreData } from '../DbStores/models.ts';
+import {getChangeRecords} from '../DbStores/models_new.js';
 import {saveAs} from 'file-saver';
 import CustomRichTextEditor from './CustomRichTextEditor.js';
 
 
-export class FormView extends Component {
+export class ChangeRecordsTable extends Component {
     constructor(props) {
       super(props)
     
@@ -27,22 +28,23 @@ export class FormView extends Component {
 
     componentDidMount(){
       //Intialise db
-      const status = initDB();
-      console.log(status);
-      this.setState({setIsDBReady:status.response});
+      // const status = initDB();
+      // console.log(status);
+      // this.setState({setIsDBReady:status.response});
 
-      const users = getStoreData(Stores.Users);
-      users.then((e)=>{this.setState({data:e})});
+      // const users = getStoreData(Stores.Users);
+      // users.then((e)=>{this.setState({data:e})});
      
     }
 
     componentDidUpdate(prevProps){
       const status = initDB();
-      const users = getStoreData(Stores.Users);
-      console.log`prevProps.formsubmitted = ${prevProps.formSubmitted}`;
-      if(this.props.formSubmitted !== prevProps.formSubmitted){
-        api.get('/').then(response=>console.log(response)).catch(error=>console.log(error));
-      }
+      const users = getChangeRecords();
+      console.log(users);
+      // console.log`prevProps.formsubmitted = ${prevProps.formSubmitted}`;
+      // if(this.props.formSubmitted !== prevProps.formSubmitted){
+      //   api.get('/').then(response=>console.log(response)).catch(error=>console.log(error));
+      // }
       
       
       
@@ -50,17 +52,13 @@ export class FormView extends Component {
     
     deleteRecord =(id)=>{
       console.log(id);
-      deleteData(Stores.Users, id)
+      
       window.location.reload();
       
       
     }
 
     updateStatus = (id, menuItem)=>{
-      if(updateStatusData(id, Stores.Users, menuItem)){
-        setTimeout(()=>{
-          window.location.reload(); 
-       },1000)}
             
 
     }
@@ -213,5 +211,4 @@ export class FormView extends Component {
   }
 }
 
-
-export default FormView
+export default ChangeRecordsTable

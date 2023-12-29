@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ChangeRecordForm  from './ChangeRecordForm';
-import FormView from './FormView';
+import ChangeRecordsTable from './ChangeRecordsTable';
 
 
 export class FormParent extends Component {
@@ -24,7 +24,7 @@ export class FormParent extends Component {
     return (
       <div>
         <ChangeRecordForm data={this.props} onFormSubmit={this.handleSubmit}/>
-        {/* <FormView formSubmitted={this.state.formSubmitted}/> */}
+        {/* <ChangeRecordsTable formSubmitted={this.state.formSubmitted}/> */}
     </div>
     )
   }

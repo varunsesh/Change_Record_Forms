@@ -6,7 +6,7 @@ import { getProjects } from '../DbStores/models_new'; // Import functions from m
 import React, { useEffect, useState } from 'react';
 //import { Link } from 'react-router-dom';
 
-function NavBar({props, onSelect}) {
+function NavBar({props, onSelect, goHome}) {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState('');
 
@@ -34,9 +34,6 @@ function NavBar({props, onSelect}) {
     setSelectedProject(e.target.value);
   }
 
-  const goHome = ()=>{
-    
-  }
   return (
     <Navbar  expand="lg" className="bg-body-tertiary">
       <Container>

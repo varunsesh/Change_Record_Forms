@@ -1,5 +1,5 @@
 const dbName = "CR_DB";
-const dbVersion = 2;
+const dbVersion = 5;
 const projectStoreName = "projects";
 const changeRecordStoreName = "changeRecords";
 

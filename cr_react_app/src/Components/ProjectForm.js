@@ -25,7 +25,7 @@ function ProjectForm({onProjectAdd}) {
     };
     try {
       await createProject(newProject);
-      //onProjectAdd(); // Callback to update the list of projects in the parent component
+       onProjectAdd();// Callback to update the list of projects in the parent component
       setProjectName('');
       setProjectDescription('');
     } catch (error) {
