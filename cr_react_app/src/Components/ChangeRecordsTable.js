@@ -103,7 +103,9 @@ function ChangeRecordsTable(props) {
         onSave={handleSaveEdit}
         onCancel={handleCancelEdit}
       />
+
     </div>
+
   );
 }
 
