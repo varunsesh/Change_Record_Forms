@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container';
 import { getProjects } from '../DbStores/models_new';
 
 
-const HomePage = ({props, onNewForm}) => {
+const HomePage = ({props, onNewForm, onShowCR}) => {
 
  const [projects, setProjects] = useState();
  const [createForm, setCreateForm] = useState(false);
@@ -16,7 +16,6 @@ const HomePage = ({props, onNewForm}) => {
   const fetchProjects = async () => {
     try {
       const projects = await getProjects();
-      projects.map((project)=>{console.log(project.project_name)});
       setProjects(projects);
       if (projects.length > 0) {
         setSelectedProject(projects[0].project_id);
@@ -37,6 +36,7 @@ const HomePage = ({props, onNewForm}) => {
     const handleChange  = (e) =>{
       console.log("Handling change");
       console.log(e);
+      onShowCR(e);
 
     }
 

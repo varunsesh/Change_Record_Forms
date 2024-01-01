@@ -12,6 +12,8 @@ function App() {
 const [project, setProject] = useState('1');
 const [newForm, setNewForm] = useState(false);
 const [homePage, setHomePage] = useState(true);
+const [showCR, setShowCR] = useState(false);
+
 
 const onSelect = (data)=>{
   console.log(data);
@@ -22,14 +24,21 @@ const onSelect = (data)=>{
 const onNewForm = (e)=>{
   setHomePage(false);
   setNewForm(true);
+  setShowCR(false);
 }
 
 const onProjectAdd = (e)=>{
   setHomePage(true);
   setNewForm(false);
+  setShowCR(false);
 }
 
-
+const onShowCR = (e) => {
+  console.log(e);
+  setProject(e);
+  setShowCR(true);
+  
+}
 
 
 
@@ -37,9 +46,9 @@ const onProjectAdd = (e)=>{
     <div className="App">
     
     <NavBar goHome={onProjectAdd} onSelect={onSelect}></NavBar>
-    {homePage && <HomePage onNewForm={onNewForm}/>}
+    {homePage && <HomePage onShowCR={onShowCR} onNewForm={onNewForm}/>}
     {newForm && <ProjectForm onProjectAdd={onProjectAdd}/> }
-    {/* <FormParent data={project}/> */}
+    { showCR && <FormParent selectedProjectID={project}/>}
     </div>
   );
 }

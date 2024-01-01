@@ -14,7 +14,6 @@ function NavBar({props, onSelect, goHome}) {
     const fetchProjects = async () => {
       try {
         const projects = await getProjects();
-        console.log(projects);
         setProjects(projects);
         if (projects.length > 0) {
           setSelectedProject(projects[0].project_id);

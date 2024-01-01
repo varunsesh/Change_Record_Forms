@@ -1,33 +1,23 @@
-import React, { Component } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import ChangeRecordForm  from './ChangeRecordForm';
 import ChangeRecordsTable from './ChangeRecordsTable';
 
 
-export class FormParent extends Component {
-    constructor(props) {
-      super(props)
-    
-      this.state = {
-         formSubmitted:false
-      }
-    }
+function FormParent ({selectedProjectID}) {
+  const [projectID, setProjectID] = useState(null);
 
-    handleSubmit = (e)=>{
-        this.setState(prevState=>(
-            {formSubmitted:!prevState.formSubmitted}
-        ), ()=>{console.log`state = ${this.state.formSubmitted}`})
-        const res = e.target.result;
-        console.log(`result from parent = ${res}`);
-    }
+  useEffect(()=>{
+    console.log("Form Parent data");
+    console.log(selectedProjectID);
+  }, [selectedProjectID])
 
-  render() {
     return (
       <div>
-        <ChangeRecordForm data={this.props} onFormSubmit={this.handleSubmit}/>
-        {/* <ChangeRecordsTable formSubmitted={this.state.formSubmitted}/> */}
+        <ChangeRecordForm pid={selectedProjectID} />
+        <ChangeRecordsTable pid={selectedProjectID}/>
     </div>
     )
-  }
+  
 }
 
 export default FormParent;

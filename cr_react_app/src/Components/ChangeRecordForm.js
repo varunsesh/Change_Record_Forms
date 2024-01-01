@@ -10,12 +10,13 @@ function ChangeRecordForm(props) {
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
-}, [selectedProject]);
+    setSelectedProject(props.pid);
+}, [props]);
   
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(props.data.data);
+    console.log(props.pid);
     console.log(selectedProject);
 
     const newRecord = {
@@ -38,7 +39,8 @@ function ChangeRecordForm(props) {
   };
 
   const handleEditorContentChange = (data)=>{
-    setSelectedProject(props.data.data);
+    console.log(props);
+    setSelectedProject(props.pid);
     setSummary(data);
     console.log(data);
   }
@@ -58,7 +60,8 @@ function ChangeRecordForm(props) {
       </label>
       <br></br>
       <label>
-        Title:
+        Title
+        <br></br>
         <input
           type="text"
           value={title}
@@ -66,6 +69,7 @@ function ChangeRecordForm(props) {
           required
         />
       </label>
+      <br></br>
       <br></br>
       <label>Summary
         <br />

@@ -1,214 +1,110 @@
-import React, { Component, useState, useEffect } from 'react';
-import api from './api.js';
-import DropdownMenu from "./Dropdown.js";
-import PopupCard from './PopupCard.js';
-import "../styles.css";
-import { initDB, Stores, getStoreData, deleteData, updateStatusData, addData, updateStoreData } from '../DbStores/models.ts';
-import {getChangeRecords} from '../DbStores/models_new.js';
+import React, { useState, useEffect } from 'react';
+import { getChangeRecords, deleteChangeRecord, updateChangeRecord } from '../DbStores/models_new';
 import {saveAs} from 'file-saver';
-import CustomRichTextEditor from './CustomRichTextEditor.js';
+import CustomRichTextEditor from './CustomRichTextEditor.js'; 
+import "../styles.css";
+import DropdownMenu from "./Dropdown";
+import PopupCard from './PopupCard';
+import EditModal from './EditModal.js';
+import Button from 'react-bootstrap/Button';
 
 
-export class ChangeRecordsTable extends Component {
-    constructor(props) {
-      super(props)
-    
-      this.state = {
-         formSubmitted:false,
-         data:[],
-         selectedItemValue:"", 
-         isPopupVisible: false, // State to control the visibility of the pop-up card
-         selectedRowData: null, // Store data for the selected row, 
-         isDBReady: false, 
-         setIsDBReady: false, 
-         isEditorShow: false, 
-         
-      }
-    }
+// Import the function to fetch change records
 
-    componentDidMount(){
-      //Intialise db
-      // const status = initDB();
-      // console.log(status);
-      // this.setState({setIsDBReady:status.response});
-
-      // const users = getStoreData(Stores.Users);
-      // users.then((e)=>{this.setState({data:e})});
-     
-    }
-
-    componentDidUpdate(prevProps){
-      const status = initDB();
-      const users = getChangeRecords();
-      console.log(users);
-      // console.log`prevProps.formsubmitted = ${prevProps.formSubmitted}`;
-      // if(this.props.formSubmitted !== prevProps.formSubmitted){
-      //   api.get('/').then(response=>console.log(response)).catch(error=>console.log(error));
-      // }
-      
-      
-      
-    }
-    
-    deleteRecord =(id)=>{
-      console.log(id);
-      
-      window.location.reload();
-      
-      
-    }
-
-    updateStatus = (id, menuItem)=>{
-            
-
-    }
-
-    editRecord = (item)=>{
-      this.showEditor(item);
-    }
-
-  //Function to show rich text editor with data when edit is clicked
-  showEditor=(data)=>{
-    this.setState({
-      isEditorShow:true,
-      selectedRowData: data,
-    })
-  }
-
-  handleEditorContentChange = (content, id) => {
-    console.log(content);
-    console.log(id); 
-    var data = {
-      "id":id, 
-      "name":this.state.selectedRowData.username,
-      "summary":content,
-      "title": this.state.selectedRowData.title,
-      "status":this.state.selectedRowData.status,
-    }
-    console.log(data);
-    this.setState({selectedRowData:data});
-  };
-
-  updateRecord = (data)=>{
-    console.log(data);
-    if(updateStoreData(data.id, Stores.Users, data.summary)){
-      setTimeout(()=>{
-        window.location.reload(); 
-     },1000)}
-
-  }
+function ChangeRecordsTable(props) {
+  const [records, setRecords] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState(null);
   
-  hideEditor=(data)=>{
-    console.log("On update...");
-    this.setState({
-      isEditorShow:false, 
-    })
-    this.updateRecord(this.state.selectedRowData);
-  }
-    // Function to show the pop-up card when a row is clicked
-  showPopup = (rowData) => {
-    
-    this.setState({
-      isPopupVisible: true,
-      selectedRowData: rowData,
-    });
-  };
+  
 
-  // Function to hide the pop-up card
-  hidePopup = () => {
-    this.setState({
-      isPopupVisible: false,
-      selectedRowData: null,
-    });
-  };
-     
-  handleSubmit=(props)=>{
-    console.log(props);
-    this.setState({formsubmitted:true});
-    console.log`state updated`;
-  }
-
-  exportDB = ()=>{
-    console.log(`exporting entire DB`);
-    const users = getStoreData(Stores.Users);
-   
-    users.then((e)=>{
-      const result = JSON.stringify(e);
-      const download = new Blob([result], {type: 'text/plain;charset=utf-8'});
-      saveAs(download, "db.json");
-    });
-  }
-
-  importDB = (e)=>{
-    const fileReader = new FileReader();
-    fileReader.readAsText(e.target.files[0], "UTF-8");
-    fileReader.onload = (e) => {
-      const importData = JSON.parse(e.target.result);
-      for (let dat in importData){
-        addData(Stores.Users, importData[dat]).then((e)=>{ this.setState((prevState) => ({data: [...prevState.data, e]}));});
+  useEffect(() => {
+    const fetchRecords = async () => {
+      try {
+        const allRecords = await getChangeRecords();
+        const filteredRecords = allRecords.filter(record => record.project_id === props.pid);
+        console.log(filteredRecords);
+        setRecords(filteredRecords);
+      } catch (error) {
+        console.error('Error fetching change records:', error);
       }
-     
     };
-  
+    if(props.pid)
+        fetchRecords();
+  },[props]);
+
+  const handleClick = ()=>{console.log("Clicked");}
+  const exportDB = ()=>{console.log("Clicked");}
+  const importDB = ()=>{console.log("Clicked");}
+
+  const handleEditClick = (record) => {
+    setCurrentRecord(record);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = async (editedRecord) => {
+    // Save the edited record to the database
+    // Update the records state to reflect the change
+    console.log(editedRecord);
+    const recordData = {
+      summary:editedRecord.summary
+    }
+    updateChangeRecord(editedRecord.cr_id, recordData);
+    setIsEditModalOpen(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleDelete = async (cr_id) => {
+    try {
+      await deleteChangeRecord(cr_id); // Function to delete record from IndexedDB
+      setRecords(records.filter(record => record.cr_id !== cr_id));
+    } catch (error) {
+      console.error('Error deleting record:', error);
+    }
+  };
 
 
-  }
-    
-  render() {
-    return (
-      <div>
-        <br/><br/>
-        <button className=' button button1' type='button' onClick={this.exportDB}>Export</button>
-        <input type="file" className='button button1' onChange={this.importDB} Import/>
-        <table className="nice-table">
-            <thead>
-            <tr>
-             <th>CR_ID</th>
-             <th>Name</th>
-             <th>Title</th>
-             {/* <th>Date</th> */}
-             <th>Status</th>
-             <th>Select Status</th>
-             <th>Actions</th>
-           </tr>
-            </thead>
-            <tbody>
-            {this.state.data.map((item) => (
-             <tr key={item.id}>
-               
-               <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.id}</div></td>
-               <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.username}</div></td>
-               <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.title}</div></td>
-               
-               <td><div className="row-clickable" onClick={() => this.showPopup(item)}>{item.status}</div></td>
-               <td><DropdownMenu onItemSelected={(menuItem)=>this.updateStatus(item.id, menuItem)}/> </td>
-               <td><div><button className='button button0' onClick={()=>this.deleteRecord(item.id)}>Delete</button>
-               <button className='button button0' onClick={()=>this.editRecord(item)}>Edit</button>
-               </div></td>
-             </tr>
-           ))}
-            
-            </tbody>
-    
-        </table>
-        {this.state.isPopupVisible && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <PopupCard data={this.state.selectedRowData} onClose={this.hidePopup} />
-          </div>
-        </div>
-        )}
-         {this.state.isEditorShow && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <CustomRichTextEditor data={this.state.selectedRowData} onContentChange={this.handleEditorContentChange} editMode={this.state.isEditorShow} onClose={this.hideEditor} />
-          </div>
-        </div>
-        )}        
+  return (
+    <div>
+      <button className=' button button1' type='button' onClick={exportDB}>Export</button>
+        <input type="file" className='button button1' onChange={importDB} Import/>
+    <table className='nice-table'>
+      <thead>
+        <tr>
+          <th>CR_ID</th>
+          <th>Name</th>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {records.map(record => (
+          <tr key={record.cr_id}>
+            <td><div className='row-clickable' onClick={handleClick}>{record.cr_id}</div></td>
+            <td>{record.requester_name}</td>
+            <td>{record.title}</td>
+            <td>{record.status}</td>
+            <td>
+              {/* Add buttons or links for edit/delete actions */}
+             <Button onClick={() => handleEditClick(record)}>Edit</Button>
+             <Button onClick={() => handleDelete(record.cr_id)}>Delete</Button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <EditModal
+        record={currentRecord}
+        isOpen={isEditModalOpen}
+        onSave={handleSaveEdit}
+        onCancel={handleCancelEdit}
+      />
     </div>
-
-    )
-  }
+  );
 }
 
-export default ChangeRecordsTable
+export default ChangeRecordsTable;
