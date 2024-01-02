@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { createChangeRecord, getProjects } from '../DbStores/models_new'; // Import functions from models.js
 import CustomRichTextEditor from './CustomRichTextEditor';
+import Button from 'react-bootstrap/Button';
 
 function ChangeRecordForm(props) {
   const [selectedProject, setSelectedProject] = useState('');
@@ -77,7 +78,7 @@ function ChangeRecordForm(props) {
         </textarea> */}
         <CustomRichTextEditor data={editMode} onContentChange={handleEditorContentChange} value={summary} />
         </label><br/><br/>
-      <button type="submit">Add Change Record</button>
+      <Button variant = 'primary' type="submit">Add Change Record</Button>
     </form>
   );
 }

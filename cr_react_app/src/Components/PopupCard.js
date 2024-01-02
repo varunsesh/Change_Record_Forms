@@ -15,7 +15,7 @@ function PopupCard({ isOpen, data, onCancel }) {
             </Modal.Title>
           </Modal.Header>
 
-          <Modal.Body>
+          <Modal.Body className='.popup-card'>
             <div align='left' dangerouslySetInnerHTML={{__html: data.summary}}/>
           </Modal.Body>
 

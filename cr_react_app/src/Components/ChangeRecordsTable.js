@@ -95,7 +95,7 @@ function ChangeRecordsTable(props) {
 
   return (
     <div>
-      <button className=' button button1' type='button' onClick={exportDB}>Export</button>
+      <Button variant='secondary' onClick={exportDB}>Export</Button>
         <input type="file" className='button button1' onChange={importDB} Import/>
     <table className='nice-table'>
       <thead>
@@ -117,7 +117,7 @@ function ChangeRecordsTable(props) {
             <td>
               {/* Add buttons or links for edit/delete actions */}
              <Button onClick={() => handleEditClick(record)}>Edit</Button>
-             <Button onClick={() => handleDelete(record.cr_id)}>Delete</Button>
+             <Button variant='danger' onClick={() => handleDelete(record.cr_id)}>Delete</Button>
             </td>
           </tr>
         ))}
