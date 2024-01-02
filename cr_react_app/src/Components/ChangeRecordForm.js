@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { createChangeRecord, getProjects } from '../DbStores/models_new'; // Import functions from models.js
 import CustomRichTextEditor from './CustomRichTextEditor';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 function ChangeRecordForm(props) {
   const [selectedProject, setSelectedProject] = useState('');
@@ -47,39 +48,32 @@ function ChangeRecordForm(props) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <br></br>
-      <label>
-        Requester Name
-        <br></br>
-        <input
-          type="text"
-          value={requesterName}
-          onChange={(e) => setRequesterName(e.target.value)}
-          required
-        />
-      </label>
-      <br></br>
-      <label>
-        Title
-        <br></br>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </label>
-      <br></br>
-      <br></br>
-      <label>Summary
-        <br />
-        {/* <textarea name="summary" cols="50" rows="20" value={this.state.summary} onChange={(e)=>this.handleChange(e)}>
-        </textarea> */}
-        <CustomRichTextEditor onContentChange={handleEditorContentChange} isReset={reset} />
-        </label><br/><br/>
+    <div>
+    <Form onSubmit={handleSubmit}>
+      <Form.Group className="mb-3" controlId="requesterName">
+        <Form.Label>Requester Name</Form.Label>
+        <Form.Control onChange={(e)=>setRequesterName(e.target.value)} type="text" placeholder="Enter requester name" />
+        <Form.Text className="text-muted">
+          Enter requester name here
+        </Form.Text>
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="title">
+        <Form.Label>Title</Form.Label>
+        <Form.Control onChange={(e)=>setTitle(e.target.value)} type="text" placeholder="Enter title name" />
+        <Form.Text className="text-muted">
+          Enter record title name here
+        </Form.Text>
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="description">
+        <Form.Label>Description
+        <CustomRichTextEditor onContentChange={handleEditorContentChange} isReset={reset}/>
+
+        </Form.Label>
+        
+      </Form.Group>
       <Button variant = 'primary' type="submit">Add Change Record</Button>
-    </form>
+    </Form>
+    </div>
   );
 }
 
