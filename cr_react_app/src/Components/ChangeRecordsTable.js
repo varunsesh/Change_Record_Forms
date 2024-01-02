@@ -22,7 +22,7 @@ function ChangeRecordsTable(props) {
   useEffect(() => {
     const fetchRecords = async () => {
       try {
-        const allRecords = await getChangeRecords();
+        const allRecords = await getChangeRecords(props.pid);
         const filteredRecords = allRecords.filter(record => record.project_id === props.pid);
         setRecords(filteredRecords);
       } catch (error) {
