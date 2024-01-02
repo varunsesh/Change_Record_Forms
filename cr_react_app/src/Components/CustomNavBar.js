@@ -38,18 +38,6 @@ function NavBar({props, onSelect, goHome}) {
       <Container>
         <Navbar.Brand href="#home" onClick={goHome}>Change Record Form</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-        <select
-          value={selectedProject}
-          onChange={handleChange}
-        >
-          {projects.map((project) => (
-            <option key={project.project_id} value={project.project_id}>
-              {project.project_name}
-            </option>
-          ))}
-        </select>
-        </Navbar.Collapse>
       </Container>
     </Navbar>
   );

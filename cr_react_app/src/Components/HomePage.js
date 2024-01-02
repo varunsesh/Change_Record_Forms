@@ -18,7 +18,7 @@ const HomePage = ({props, onNewForm, onShowCR}) => {
       const projects = await getProjects();
       setProjects(projects);
       if (projects.length > 0) {
-        setSelectedProject(projects[0].project_id);
+        setSelectedProject(projects[0].project_name);
       }
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -33,10 +33,11 @@ const HomePage = ({props, onNewForm, onShowCR}) => {
         console.log("Clicked here");
     }
 
-    const handleChange  = (e) =>{
+    const handleChange  = (project_id) =>{
       console.log("Handling change");
-      console.log(e);
-      onShowCR(e);
+      console.log(project_id);
+      setSelectedProject(projects[project_id-1].project_name);
+      onShowCR(project_id);
 
     }
 
@@ -45,6 +46,7 @@ const HomePage = ({props, onNewForm, onShowCR}) => {
       console.log("new form");
       console.log(props);
     }
+
 
   return (
     <div>
@@ -55,6 +57,7 @@ const HomePage = ({props, onNewForm, onShowCR}) => {
             <Dropdown.Toggle  variant="" id="dropdown-basic">
             Choose Project
           </Dropdown.Toggle>
+          <h6>{selectedProject}</h6>
                <Dropdown.Menu >
                 {projects && projects.map((project)=><Dropdown.Item eventKey = {project.project_id} key={project.project_id}>{project.project_name}</Dropdown.Item>)}
             </Dropdown.Menu>
