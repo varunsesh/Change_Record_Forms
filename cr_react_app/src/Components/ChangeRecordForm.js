@@ -9,6 +9,7 @@ function ChangeRecordForm(props) {
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [editMode, setEditMode] = useState(false);
+  const [reset, setReset] = useState(false);
 
   useEffect(() => {
     setSelectedProject(props.pid);
@@ -33,17 +34,16 @@ function ChangeRecordForm(props) {
       // Reset form fields
       setRequesterName('');
       setTitle('');
-      setSummary('');
+      setReset(true);
     } catch (error) {
       console.error('Error adding change record:', error);
     }
   };
 
-  const handleEditorContentChange = (data)=>{
-    console.log(props);
+  const handleEditorContentChange = (data, isReset)=>{
     setSelectedProject(props.pid);
     setSummary(data);
-    console.log(data);
+    setReset(isReset);
   }
 
   return (
@@ -76,7 +76,7 @@ function ChangeRecordForm(props) {
         <br />
         {/* <textarea name="summary" cols="50" rows="20" value={this.state.summary} onChange={(e)=>this.handleChange(e)}>
         </textarea> */}
-        <CustomRichTextEditor data={editMode} onContentChange={handleEditorContentChange} value={summary} />
+        <CustomRichTextEditor onContentChange={handleEditorContentChange} isReset={reset} />
         </label><br/><br/>
       <Button variant = 'primary' type="submit">Add Change Record</Button>
     </form>
