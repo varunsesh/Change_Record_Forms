@@ -15,6 +15,7 @@ function ChangeRecordsTable(props) {
   const [records, setRecords] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
+  const [isPopup, setIsPopup] = useState(false);
   
   
 
@@ -23,7 +24,6 @@ function ChangeRecordsTable(props) {
       try {
         const allRecords = await getChangeRecords();
         const filteredRecords = allRecords.filter(record => record.project_id === props.pid);
-        console.log(filteredRecords);
         setRecords(filteredRecords);
       } catch (error) {
         console.error('Error fetching change records:', error);
@@ -31,27 +31,53 @@ function ChangeRecordsTable(props) {
     };
     if(props.pid)
         fetchRecords();
-  },[props]);
+  },[props, records]);
 
-  const handleClick = ()=>{console.log("Clicked");}
+  const handleClick = (record)=>{
+    console.log(record);
+    setCurrentRecord(record);
+    setIsPopup(true);
+  }
   const exportDB = ()=>{console.log("Clicked");}
   const importDB = ()=>{console.log("Clicked");}
 
+  const closePopup = ()=>{setIsPopup(false)}
   const handleEditClick = (record) => {
+    console.log(record);
     setCurrentRecord(record);
     setIsEditModalOpen(true);
   };
 
   const handleSaveEdit = async (editedRecord) => {
-    // Save the edited record to the database
-    // Update the records state to reflect the change
     console.log(editedRecord);
     const recordData = {
-      summary:editedRecord.summary
+      // Ensure all fields are included
+      summary: editedRecord.summary,
+      project_id:editedRecord.pid, 
+      requester_name: editedRecord.requester_name, 
+      title:editedRecord.title
+      // ... other fields as needed ...
+    };
+  
+    try {
+      const updatedRecords = await updateChangeRecord(editedRecord.cr_id, recordData);
+      
+      // // Manually update the record in the state
+      // const updatedRecords = records.map(record => {
+      //   if (record.cr_id === editedRecord.cr_id) {
+      //     return { ...record, ...recordData };
+      //   }
+      //   return record;
+      // });
+      console.log(updatedRecords);
+  
+      //setRecords(updatedRecords);
+      setIsEditModalOpen(false);
+    } catch (error) {
+      console.error('Error updating record:', error);
     }
-    updateChangeRecord(editedRecord.cr_id, recordData);
-    setIsEditModalOpen(false);
   };
+  
 
   const handleCancelEdit = () => {
     setIsEditModalOpen(false);
@@ -84,7 +110,7 @@ function ChangeRecordsTable(props) {
       <tbody>
         {records.map(record => (
           <tr key={record.cr_id}>
-            <td><div className='row-clickable' onClick={handleClick}>{record.cr_id}</div></td>
+            <td><div className='row-clickable' onClick={()=>handleClick(record)}>{record.cr_id}</div></td>
             <td>{record.requester_name}</td>
             <td>{record.title}</td>
             <td>{record.status}</td>
@@ -97,15 +123,19 @@ function ChangeRecordsTable(props) {
         ))}
       </tbody>
     </table>
-    <EditModal
+    {isEditModalOpen && <EditModal
         record={currentRecord}
         isOpen={isEditModalOpen}
         onSave={handleSaveEdit}
         onCancel={handleCancelEdit}
-      />
-
+      />}
+    {isPopup && <PopupCard
+    isOpen={isPopup}
+    data={currentRecord}
+    onCancel={closePopup}
+    />}
     </div>
-
+    
   );
 }
 

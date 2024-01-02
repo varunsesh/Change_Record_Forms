@@ -79,6 +79,11 @@
   overflow: auto;
 }
 
+.popup-card .modal-body img {
+  max-width: 100%;
+  height: auto;
+}
+
 
   /* styles.css or your CSS file */
   .row-container {

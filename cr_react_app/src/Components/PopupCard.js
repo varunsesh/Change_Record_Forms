@@ -1,37 +1,29 @@
-// PopupCard.js (Separate Component for Pop-Up Card)
-
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import "../styles.css";
 
-function PopupCard({ isOpen, data }) {
-  
-
-  const summaryHTML = {__html: data.summary};
-  const onCancel = ()=>{console.log("cancel madi");}
-
+function PopupCard({ isOpen, data, onCancel }) {
   return (
     <div className="popup-card">
-      <Modal show={isOpen}>
-      <Modal.Dialog>
-        <Modal.Header closeButton>
-          <Modal.Title><h4>{data.title}</h4></Modal.Title>
-          <Modal.Title><p>{data.username}</p></Modal.Title>
-        </Modal.Header>
+      {data && (
+        <Modal show={isOpen} onHide={onCancel}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              <h4>{data.title}</h4>
+              <p>{data.username}</p>
+            </Modal.Title>
+          </Modal.Header>
 
-        <Modal.Body>
-        <div align='left' dangerouslySetInnerHTML={summaryHTML}/>
-        </Modal.Body>
+          <Modal.Body>
+            <div align='left' dangerouslySetInnerHTML={{__html: data.summary}}/>
+          </Modal.Body>
 
-        <Modal.Footer>
-          <Button variant="secondary" onClick={onCancel}>Close</Button>
-        </Modal.Footer>
-      </Modal.Dialog>
-    </Modal>
-      {/* <h4>{data.title}</h4>
-      <p>{data.username}</p>
-      <div align="left" dangerouslySetInnerHTML={summaryHTML}/>
-      <button onClick={onClose}>Close</button> */}
+          <Modal.Footer>
+            <Button variant="secondary" onClick={onCancel}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </div>
   );
 }

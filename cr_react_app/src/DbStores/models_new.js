@@ -95,6 +95,7 @@ async function getChangeRecords() {
 
 async function updateChangeRecord(recordId, updateData) {
   const db = await openDB();
+  console.log(recordId);
   const transaction = db.transaction(changeRecordStoreName, "readwrite");
   const store = transaction.objectStore(changeRecordStoreName);
   return new Promise((resolve, reject) => {

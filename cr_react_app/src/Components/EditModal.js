@@ -8,7 +8,7 @@ function EditModal({ record, isOpen, onSave, onCancel }) {
   const [editedRecord, setEditedRecord] = useState(record);
 
   useEffect(() => {
-    console.log(record)
+    console.log(record);
     if (record) {
       setEditedRecord(record.summary); // Ensure record is valid
     }
@@ -19,6 +19,8 @@ function EditModal({ record, isOpen, onSave, onCancel }) {
     const updateRecordData = {
       pid:record.project_id,
       cr_id:record.cr_id,
+      requester_name:record.requester_name,
+      title:record.title,
       summary:editedRecord
     }
     onSave(updateRecordData); // Pass the edited record back to the parent component
