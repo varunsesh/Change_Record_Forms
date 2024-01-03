@@ -15,6 +15,7 @@ const [homePage, setHomePage] = useState(true);
 const [showCR, setShowCR] = useState(false);
 
 
+
 const onSelect = (data)=>{
   console.log(data);
   setProject(data);
@@ -37,6 +38,7 @@ const onShowCR = (e) => {
   console.log(e);
   setProject(e);
   setShowCR(true);
+  setHomePage(false);
   
 }
 
@@ -45,9 +47,9 @@ const onShowCR = (e) => {
   return (
     <div className="App">
     
-    <NavBar goHome={onProjectAdd} onSelect={onSelect}></NavBar>
-    {homePage && <HomePage onShowCR={onShowCR} onNewForm={onNewForm}/>}
-    {newForm && <ProjectForm onProjectAdd={onProjectAdd}/> }
+    <NavBar goHome={onProjectAdd} onSelect={onSelect} isHome={homePage}></NavBar>
+    <HomePage onShowCR={onShowCR} onNewForm={onNewForm} isHome={homePage}/>
+    {newForm && <ProjectForm onProjectAdd={onProjectAdd} /> }
     { showCR && <FormParent selectedProjectID={project}/>}
     </div>
   );

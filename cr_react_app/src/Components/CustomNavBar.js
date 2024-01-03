@@ -16,7 +16,7 @@ function NavBar({props, onSelect, goHome}) {
         const projects = await getProjects();
         setProjects(projects);
         if (projects.length > 0) {
-          setSelectedProject(projects[0].project_id);
+          setSelectedProject(projects[0].project_name);
         }
       } catch (error) {
         console.error('Error fetching projects:', error);

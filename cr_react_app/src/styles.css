@@ -85,6 +85,12 @@
   overflow:auto;
 }
 
+.modal-dialog {
+  max-width: 80% !important;
+  height: 80% !important;
+  overflow:auto !important;
+  margin: 1.75rem auto !important;
+  }
 
   /* styles.css or your CSS file */
   .row-container {

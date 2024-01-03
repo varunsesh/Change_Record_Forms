@@ -5,7 +5,7 @@ import "../styles.css";
 
 function PopupCard({ isOpen, data, onCancel }) {
   return (
-    <div className="popup-card">
+    <div>
       {data && (
         <Modal show={isOpen} onHide={onCancel}>
           <Modal.Header closeButton>
@@ -15,8 +15,8 @@ function PopupCard({ isOpen, data, onCancel }) {
             </Modal.Title>
           </Modal.Header>
 
-          <Modal.Body className='.popup-card'>
-            <div align='left' dangerouslySetInnerHTML={{__html: data.summary}}/>
+          <Modal.Body >
+            <div className='.modal-dialog' align='left' dangerouslySetInnerHTML={{__html: data.summary}}/>
           </Modal.Body>
 
           <Modal.Footer>
