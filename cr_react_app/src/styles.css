@@ -70,26 +70,11 @@
   z-index: 1000; /* Adjust the z-index as needed */
 }
 
-.popup-card {
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-width: 80%;
-  max-height: 80%;
-  overflow: auto;
-}
-
-.popup-card .modal-body img {
-  max-width: 80%;
-  height: auto;
-  overflow:auto;
-}
-
-.modal-dialog {
-  max-width: 80% !important;
-  height: 80% !important;
+.modal-dialog img {
+  max-width: 90% !important;
+  height: auto !important;
   overflow:auto !important;
-  margin: 1.75rem auto !important;
+  /* margin: 1.75rem auto !important; */
   }
 
   /* styles.css or your CSS file */

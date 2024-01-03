@@ -4,6 +4,12 @@ import Button from 'react-bootstrap/Button';
 import "../styles.css";
 
 function PopupCard({ isOpen, data, onCancel }) {
+  var styles = {
+    root: {
+      width: "90% !important"
+    },
+  }
+
   return (
     <div>
       {data && (
@@ -16,7 +22,7 @@ function PopupCard({ isOpen, data, onCancel }) {
           </Modal.Header>
 
           <Modal.Body >
-            <div className='.modal-dialog' align='left' dangerouslySetInnerHTML={{__html: data.summary}}/>
+            <div align='left' style={styles} dangerouslySetInnerHTML={{__html: data.summary}}/>
           </Modal.Body>
 
           <Modal.Footer>

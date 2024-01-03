@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { getProjects } from '../DbStores/models_new'; // Import functions from models.js
 import React, { useEffect, useState } from 'react';
+import { Dropdown } from 'bootstrap';
 //import { Link } from 'react-router-dom';
 
 function NavBar({props, onSelect, goHome}) {
@@ -38,6 +39,9 @@ function NavBar({props, onSelect, goHome}) {
       <Container>
         <Navbar.Brand href="#home" onClick={goHome}>Change Record Form</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <NavDropdown title={projects[selectedProject-1]} id="basic-nav-dropdown">
+          {projects && projects.map((project)=><NavDropdown.Item>{project.project_name}</NavDropdown.Item>)}
+          </NavDropdown>
       </Container>
     </Navbar>
   );
