@@ -6,6 +6,8 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 
 
+
+
 function ChangeRecordForm(props) {
   const [selectedProject, setSelectedProject] = useState('');
   const [requesterName, setRequesterName] = useState('');
@@ -28,6 +30,7 @@ function ChangeRecordForm(props) {
     const newRecord = {
       project_id: selectedProject,
       requester_name: requesterName,
+      crStatus:"",
       title,
       summary,
     };

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getChangeRecords, deleteChangeRecord, updateChangeRecord } from '../DbStores/models_new';
-import {saveAs} from 'file-saver';
+import { getChangeRecords, deleteChangeRecord, updateChangeRecord, exportDatabaseToJson, clearAndInsertData } from '../DbStores/models_new';
 import CustomRichTextEditor from './CustomRichTextEditor.js'; 
 import "../styles.css";
 import DropdownMenu from "./Dropdown";
 import PopupCard from './PopupCard';
 import EditModal from './EditModal.js';
-import Button from 'react-bootstrap/Button';
+import { Button, Form, FormGroup, FormControl, FormLabel, Card } from 'react-bootstrap';
 
 
 // Import the function to fetch change records
@@ -16,6 +15,7 @@ function ChangeRecordsTable(props) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
   const [isPopup, setIsPopup] = useState(false);
+  const [driveFolderId, setDriveFolderId] = useState('');
   
   
 
@@ -29,8 +29,9 @@ function ChangeRecordsTable(props) {
         console.error('Error fetching change records:', error);
       }
     };
-    if(props.pid)
+    if(props.pid){
         fetchRecords();
+      }
   },[props, records]);
 
   const handleClick = (record)=>{
@@ -38,8 +39,48 @@ function ChangeRecordsTable(props) {
     setCurrentRecord(record);
     setIsPopup(true);
   }
-  const exportDB = ()=>{console.log("Clicked");}
-  const importDB = ()=>{console.log("Clicked");}
+  const downloadJSON = (data, filename)=>{
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+  
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'exported-data.json';
+    document.body.appendChild(a);
+    a.click();
+    
+    // Cleanup
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+  }
+
+  const exportDB =()=>{
+    exportDatabaseToJson()
+    .then(jsonData => {
+    downloadJSON(jsonData, 'myDatabaseExport.json');
+  })
+  .catch(error => {
+    console.error('Error exporting database:', error);
+  });
+}
+
+
+  const importDB = (file)=>{
+    const reader = new FileReader();
+
+    reader.onload = async (event)=>{
+      const json = JSON.parse(event.target.result);
+      await clearAndInsertData("projects", json.projects);
+      await clearAndInsertData("changeRecords", json.changeRecords);
+    };
+    reader.onerror = (error) =>{
+      console.log("error reading file ", error);
+    };
+
+    reader.readAsText(file);
+  
+  }
 
   const closePopup = ()=>{setIsPopup(false)}
   const handleEditClick = (record) => {
@@ -78,6 +119,15 @@ function ChangeRecordsTable(props) {
     }
   };
   
+  const handleExportToDrive = async () => {
+    try {
+      const jsonData = await exportDatabaseToJson();
+      // Code to handle OAuth and uploading to Google Drive
+      // This will involve using the Google Drive API to create a file in the user's drive
+    } catch (error) {
+      console.error('Error syncing with Google Drive:', error);
+    }
+  };
 
   const handleCancelEdit = () => {
     setIsEditModalOpen(false);
@@ -92,11 +142,44 @@ function ChangeRecordsTable(props) {
     }
   };
 
+  const updateStatus = async (record, status)=>{
+    
+    const newRecord = {
+      requester_name:record.requester_name,
+      title:record.title,
+      crStatus:status,
+      summary:record.summary
+    }
+    try{
+      await updateChangeRecord(record.cr_id, newRecord);
+    }catch(error){
+      console.error('Error deleting record:', error);
+    }
+  }
+
 
   return (
     <div>
-      <Button variant='secondary' onClick={exportDB}>Export</Button>
-        <input type="file" className='button button1' onChange={importDB} Import/>
+      <br></br>
+      <Card>
+       <Button variant='secondary' onClick={exportDB}>Export to Local</Button>
+      <Form>
+        <FormGroup>
+          <FormLabel>Google Drive Folder ID:</FormLabel>
+          <FormControl
+            type="text"
+            value={driveFolderId}
+            onChange={(e) => setDriveFolderId(e.target.value)}
+            placeholder="Enter Folder ID"
+          />
+        </FormGroup>
+        <Button onClick={handleExportToDrive}>Sync to Google Drive</Button>
+      </Form>
+      <br></br>
+      <h4><p>Import DB</p></h4>
+        <input type="file" className='button button1' label="Import" onChange={(event)=>importDB(event.target.files[0])} Import />
+        </Card>
+        <h4>Change Records</h4>
     <table className='nice-table'>
       <thead>
         <tr>
@@ -104,6 +187,7 @@ function ChangeRecordsTable(props) {
           <th>Name</th>
           <th>Title</th>
           <th>Status</th>
+          <th>Update Status</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -113,7 +197,8 @@ function ChangeRecordsTable(props) {
             <td><div className='row-clickable' onClick={()=>handleClick(record)}>{record.cr_id}</div></td>
             <td>{record.requester_name}</td>
             <td>{record.title}</td>
-            <td>{record.status}</td>
+            <td><div>{record.crStatus}</div></td>
+            <td><DropdownMenu onItemSelected={(menuItem)=>updateStatus(record, menuItem)}/></td>
             <td>
               {/* Add buttons or links for edit/delete actions */}
              <Button onClick={() => handleEditClick(record)}>Edit</Button>

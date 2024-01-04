@@ -195,4 +195,35 @@ async function deleteChangeRecord(recordId) {
   });
 }
 
-export { createProject, getProjects, updateProject, deleteProject, createChangeRecord, getChangeRecords, updateChangeRecord, deleteChangeRecord };
+async function exportDatabaseToJson() {
+  const db = await openDB();
+  const transaction = db.transaction([projectStoreName, changeRecordStoreName], 'readonly');
+
+  const projectsStore = transaction.objectStore(projectStoreName);
+  const changeRecordsStore = transaction.objectStore(changeRecordStoreName);
+
+  const projects = await getAllData(projectsStore);
+  const changeRecords = await getAllData(changeRecordsStore);
+
+  const dbData = { projects, changeRecords };
+  return JSON.stringify(dbData);
+}
+
+async function getAllData(store) {
+  return new Promise((resolve, reject) => {
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+const clearAndInsertData = async (storeName, data) => {
+  const db = await openDB();
+  const transaction = db.transaction(storeName, 'readwrite');
+  const store = transaction.objectStore(storeName);
+  await store.clear();  // Clear existing data
+  data.forEach(item => store.add(item)); // Insert new data
+};
+
+
+export { createProject, getProjects, updateProject, deleteProject, createChangeRecord, getChangeRecords, updateChangeRecord, deleteChangeRecord, exportDatabaseToJson, getAllData, clearAndInsertData };

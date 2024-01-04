@@ -9,18 +9,14 @@ import ProjectForm from './Components/ProjectForm';
 
 
 function App() {
-const [project, setProject] = useState('1');
+const [project, setProject] = useState('');
 const [newForm, setNewForm] = useState(false);
 const [homePage, setHomePage] = useState(true);
 const [showCR, setShowCR] = useState(false);
 
 
 
-const onSelect = (data)=>{
-  console.log(data);
-  setProject(data);
 
-}
 
 const onNewForm = (e)=>{
   setHomePage(false);
@@ -47,7 +43,7 @@ const onShowCR = (e) => {
   return (
     <div className="App">
     
-    <NavBar goHome={onProjectAdd} onSelect={onSelect} isHome={homePage}></NavBar>
+    <NavBar goHome={onProjectAdd} onSelect={onShowCR} isHome={homePage}></NavBar>
     <HomePage onShowCR={onShowCR} onNewForm={onNewForm} isHome={homePage}/>
     {newForm && <ProjectForm onProjectAdd={onProjectAdd} /> }
     { showCR && <FormParent selectedProjectID={project}/>}
