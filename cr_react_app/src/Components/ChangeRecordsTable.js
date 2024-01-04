@@ -6,6 +6,7 @@ import DropdownMenu from "./Dropdown";
 import PopupCard from './PopupCard';
 import EditModal from './EditModal.js';
 import { Button, Form, FormGroup, FormControl, FormLabel, Card } from 'react-bootstrap';
+import DatabaseOperations from './DatabaseOperations.js';
 
 
 // Import the function to fetch change records
@@ -15,7 +16,7 @@ function ChangeRecordsTable(props) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(null);
   const [isPopup, setIsPopup] = useState(false);
-  const [driveFolderId, setDriveFolderId] = useState('');
+  
   
   
 
@@ -32,54 +33,13 @@ function ChangeRecordsTable(props) {
     if(props.pid){
         fetchRecords();
       }
+      
   },[props, records]);
 
   const handleClick = (record)=>{
     console.log(record);
     setCurrentRecord(record);
     setIsPopup(true);
-  }
-  const downloadJSON = (data, filename)=>{
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-  
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename || 'exported-data.json';
-    document.body.appendChild(a);
-    a.click();
-    
-    // Cleanup
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-  }
-
-  const exportDB =()=>{
-    exportDatabaseToJson()
-    .then(jsonData => {
-    downloadJSON(jsonData, 'myDatabaseExport.json');
-  })
-  .catch(error => {
-    console.error('Error exporting database:', error);
-  });
-}
-
-
-  const importDB = (file)=>{
-    const reader = new FileReader();
-
-    reader.onload = async (event)=>{
-      const json = JSON.parse(event.target.result);
-      await clearAndInsertData("projects", json.projects);
-      await clearAndInsertData("changeRecords", json.changeRecords);
-    };
-    reader.onerror = (error) =>{
-      console.log("error reading file ", error);
-    };
-
-    reader.readAsText(file);
-  
   }
 
   const closePopup = ()=>{setIsPopup(false)}
@@ -102,17 +62,6 @@ function ChangeRecordsTable(props) {
   
     try {
       const updatedRecords = await updateChangeRecord(editedRecord.cr_id, recordData);
-      
-      // // Manually update the record in the state
-      // const updatedRecords = records.map(record => {
-      //   if (record.cr_id === editedRecord.cr_id) {
-      //     return { ...record, ...recordData };
-      //   }
-      //   return record;
-      // });
-      console.log(updatedRecords);
-  
-      //setRecords(updatedRecords);
       setIsEditModalOpen(false);
     } catch (error) {
       console.error('Error updating record:', error);
@@ -134,7 +83,7 @@ function ChangeRecordsTable(props) {
   };
 
   const handleDelete = async (cr_id) => {
-    try {
+        try {
       await deleteChangeRecord(cr_id); // Function to delete record from IndexedDB
       setRecords(records.filter(record => record.cr_id !== cr_id));
     } catch (error) {
@@ -150,35 +99,23 @@ function ChangeRecordsTable(props) {
       crStatus:status,
       summary:record.summary
     }
+    console.log(record.cr_id);
     try{
       await updateChangeRecord(record.cr_id, newRecord);
     }catch(error){
-      console.error('Error deleting record:', error);
+      console.error('Error updating status in record:', error);
     }
+  }
+  const handleManageDB = ()=>{
+
   }
 
 
   return (
     <div>
       <br></br>
-      <Card>
-       <Button variant='secondary' onClick={exportDB}>Export to Local</Button>
-      <Form>
-        <FormGroup>
-          <FormLabel>Google Drive Folder ID:</FormLabel>
-          <FormControl
-            type="text"
-            value={driveFolderId}
-            onChange={(e) => setDriveFolderId(e.target.value)}
-            placeholder="Enter Folder ID"
-          />
-        </FormGroup>
-        <Button onClick={handleExportToDrive}>Sync to Google Drive</Button>
-      </Form>
+      
       <br></br>
-      <h4><p>Import DB</p></h4>
-        <input type="file" className='button button1' label="Import" onChange={(event)=>importDB(event.target.files[0])} Import />
-        </Card>
         <h4>Change Records</h4>
     <table className='nice-table'>
       <thead>

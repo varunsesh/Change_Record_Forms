@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import { getProjects } from '../DbStores/models_new';
+import DatabaseOperations from './DatabaseOperations';
 
 
 const HomePage = ({isHome, onNewForm, onShowCR}) => {
@@ -60,7 +61,8 @@ const HomePage = ({isHome, onNewForm, onShowCR}) => {
         </Dropdown>
         </div>
         <br />
-        {isHome && <Button onClick={onNewForm}> + Create New Project</Button>}
+        {isHome && <Button onClick={onNewForm}> + Create New Project</Button>} <br></br><br></br>
+        <DatabaseOperations />
         </Container>}
     </div>
   )

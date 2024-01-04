@@ -74,7 +74,7 @@ async function deleteProject(projectId) {
 async function createChangeRecord(recordData) {
   // Get the highest CR ID for the given project
   const highestCrId = await getHighestCrIdForProject(recordData.project_id);
-  
+
   var crInt = 0;
   if (highestCrId != 0){
     const parts = highestCrId.split('-'); // Split the string at the hyphen
@@ -134,7 +134,7 @@ async function getHighestCrIdForProject(projectId) {
 
 async function getChangeRecords(projectId) {
   const db = await openDB();
-  const transaction = db.transaction(changeRecordStoreName, "readonly");
+    const transaction = db.transaction(changeRecordStoreName, "readonly");
   const store = transaction.objectStore(changeRecordStoreName);
 
   return new Promise((resolve, reject) => {
@@ -145,7 +145,7 @@ async function getChangeRecords(projectId) {
       const filteredRecords = allRecords.filter(record => 
         typeof record.cr_id === 'string' && record.cr_id.startsWith(`${projectId}-`)
       );
-      resolve(filteredRecords);
+            resolve(filteredRecords);
     };
     request.onerror = (event) => {
       reject("Error fetching change records: " + event.target.error.message);
@@ -159,15 +159,15 @@ async function updateChangeRecord(recordId, updateData) {
   const db = await openDB();
   const transaction = db.transaction(changeRecordStoreName, "readwrite");
   const store = transaction.objectStore(changeRecordStoreName);
-
+    
   return new Promise((resolve, reject) => {
     // Fetch the record first to ensure it exists
     const getRequest = store.get(recordId);
-
+    
     getRequest.onsuccess = () => {
       if (getRequest.result) {
         // Record exists, update it
-        const updatedRecord = { ...getRequest.result, ...updateData };
+                const updatedRecord = { ...getRequest.result, ...updateData };
         const updateRequest = store.put(updatedRecord);
 
         updateRequest.onsuccess = () => resolve("Change record updated successfully");
@@ -175,7 +175,7 @@ async function updateChangeRecord(recordId, updateData) {
       } else {
         reject("Record not found for update");
       }
-    };
+          };
 
     getRequest.onerror = () => {
       reject("Error fetching record for update");
