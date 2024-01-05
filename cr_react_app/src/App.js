@@ -32,7 +32,7 @@ const onProjectAdd = (e)=>{
 
 const onShowCR = (e) => {
   console.log(e);
-  setProject(e);
+  setProject(parseInt(e));
   setShowCR(true);
   setHomePage(false);
   

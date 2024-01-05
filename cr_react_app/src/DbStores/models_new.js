@@ -1,5 +1,5 @@
 const dbName = "CR_DB";
-const dbVersion = 5;
+const dbVersion = 10;
 const projectStoreName = "projects";
 const changeRecordStoreName = "changeRecords";
 
@@ -93,7 +93,7 @@ async function createChangeRecord(recordData) {
   const store = transaction.objectStore(changeRecordStoreName);
 
   return new Promise((resolve, reject) => {
-    const request = store.add(newRecord);
+    const request = store.add(newRecord, compoundKey);
     request.onsuccess = () => resolve("Change record added successfully");
     request.onerror = (event) => {
       reject("Error adding change record: " + event.target.error.message);
@@ -107,16 +107,17 @@ async function getHighestCrIdForProject(projectId) {
   const transaction = db.transaction(changeRecordStoreName, "readonly");
   const store = transaction.objectStore(changeRecordStoreName);
   const index = store.index("project_id");
-
+  
   return new Promise((resolve, reject) => {
     let highestCrId = "";
     const request = index.openCursor(IDBKeyRange.only(projectId), "next");
-
+    
     request.onsuccess = (event) => {
       const cursor = event.target.result;
       
       if (cursor) {
         highestCrId = cursor.value.cr_id;
+        
         cursor.continue();
       } else {
         resolve(highestCrId);
@@ -159,7 +160,6 @@ async function updateChangeRecord(recordId, updateData) {
   const db = await openDB();
   const transaction = db.transaction(changeRecordStoreName, "readwrite");
   const store = transaction.objectStore(changeRecordStoreName);
-    
   return new Promise((resolve, reject) => {
     // Fetch the record first to ensure it exists
     const getRequest = store.get(recordId);
@@ -167,8 +167,9 @@ async function updateChangeRecord(recordId, updateData) {
     getRequest.onsuccess = () => {
       if (getRequest.result) {
         // Record exists, update it
-                const updatedRecord = { ...getRequest.result, ...updateData };
-        const updateRequest = store.put(updatedRecord);
+        const updatedRecord = { ...getRequest.result, ...updateData };
+        
+        const updateRequest = store.put(updatedRecord, recordId);
 
         updateRequest.onsuccess = () => resolve("Change record updated successfully");
         updateRequest.onerror = () => reject("Error updating change record");

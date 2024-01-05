@@ -51,17 +51,9 @@ function ChangeRecordsTable(props) {
 
   const handleSaveEdit = async (editedRecord) => {
     console.log(editedRecord);
-    const recordData = {
-      // Ensure all fields are included
-      summary: editedRecord.summary,
-      project_id:editedRecord.pid, 
-      requester_name: editedRecord.requester_name, 
-      title:editedRecord.title
-      // ... other fields as needed ...
-    };
   
     try {
-      const updatedRecords = await updateChangeRecord(editedRecord.cr_id, recordData);
+      const updatedRecords = await updateChangeRecord(editedRecord.cr_id, editedRecord);
       setIsEditModalOpen(false);
     } catch (error) {
       console.error('Error updating record:', error);
@@ -83,6 +75,7 @@ function ChangeRecordsTable(props) {
   };
 
   const handleDelete = async (cr_id) => {
+    
         try {
       await deleteChangeRecord(cr_id); // Function to delete record from IndexedDB
       setRecords(records.filter(record => record.cr_id !== cr_id));
