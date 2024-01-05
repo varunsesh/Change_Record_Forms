@@ -1,6 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import {exportDatabaseToJson, clearAndInsertData} from '../DbStores/models_new';
+import {google} from 'googleapis';
+import fs from 'fs';
+
 
 function DatabaseOperations() {
   const [showModal, setShowModal] = useState(false);
@@ -23,6 +26,29 @@ function DatabaseOperations() {
     URL.revokeObjectURL(url);
 
   }
+
+
+  const uploadFile = (auth, filePath) => {
+    const drive = google.drive({ version: 'v3', auth });
+    const fileMetadata = {
+        'name': 'YourFileName.json',
+        // other metadata if needed
+    };
+    const media = {
+        mimeType: 'application/json',
+        body: fs.createReadStream(filePath)
+    };
+    try {
+        const response = drive.files.create({
+            resource: fileMetadata,
+            media: media,
+            fields: 'id'
+        });
+        console.log('File ID: ', response.data.id);
+    } catch (error) {
+        console.error('Error uploading file:', error);
+    }
+}
 
   const handleExport = () => {
     if (driveLink) {
