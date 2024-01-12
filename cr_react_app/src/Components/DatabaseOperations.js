@@ -1,14 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import {exportDatabaseToJson, clearAndInsertData} from '../DbStores/models_new';
-import {google} from 'googleapis';
-import fs from 'fs';
+import oauthSignIn from './Authentication/oauth2';
 
 
-function DatabaseOperations() {
+
+function DatabaseOperations({onFileUpload}) {
   const [showModal, setShowModal] = useState(false);
   const [driveLink, setDriveLink] = useState('');
   const fileInputRef = useRef(null);
+  const [authToken, setAuthToken] = useState('');
+  const [fileToUpload, setFileToUpload] = useState(null);
+  
+
 
 
   const downloadJSON = (data, filename)=>{
@@ -27,32 +31,66 @@ function DatabaseOperations() {
 
   }
 
-
-  const uploadFile = (auth, filePath) => {
-    const drive = google.drive({ version: 'v3', auth });
-    const fileMetadata = {
-        'name': 'YourFileName.json',
-        // other metadata if needed
-    };
-    const media = {
-        mimeType: 'application/json',
-        body: fs.createReadStream(filePath)
-    };
-    try {
-        const response = drive.files.create({
-            resource: fileMetadata,
-            media: media,
-            fields: 'id'
-        });
-        console.log('File ID: ', response.data.id);
-    } catch (error) {
-        console.error('Error uploading file:', error);
+  useEffect(()=>{
+    const hash = window.location.hash;
+    if (hash) {
+        const token = new URLSearchParams(hash.substring(1)).get('access_token');
+        if (token) {
+            // Use the token as needed
+            setAuthToken(token);
+        }
     }
-}
+    if (authToken && fileToUpload) {
+      uploadFileToGoogleDrive(authToken, fileToUpload)
+      // Reset or handle the fileToUpload state as necessary
+      setFileToUpload(null);
+    }
+  }, [authToken, fileToUpload])
+
+
+
+  async function uploadFileToGoogleDrive(token, file) {
+    const metadata = {
+        'name': file.name, // file name
+        'mimeType': file.type // file MIME type
+    };
+  
+    // Form the body of the request
+    const formData = new FormData();
+    formData.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
+    formData.append('file', file);
+  
+    try {
+      const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+          method: 'POST',
+          headers: new Headers({ 'Authorization': 'Bearer ' + token }),
+          body: formData
+      });
+      onFileUpload(true);
+      const result = await response.json();
+      console.log(response);
+      
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Error uploading file: ' + error.message); // Error alert
+    }
+  }
+  
+
+
 
   const handleExport = () => {
     if (driveLink) {
-      // Export to Google Drive
+      exportDatabaseToJson()
+      .then(jsonData => {
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const file = new File([blob], 'myDatabaseExport.json', { type: 'application/json' });
+        setFileToUpload(file);
+        oauthSignIn(); // Trigger OAuth sign-in
+      })
+      .catch(error => {
+        console.error('Error exporting database:', error);
+      });
     } else {
       exportDatabaseToJson()
       .then(jsonData => {

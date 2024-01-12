@@ -4,12 +4,13 @@ import FormParent from './Components/FormParent';
 import NavBar from './Components/CustomNavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './Components/HomePage';
-import { useState } from 'react';
+import React, {useState} from 'react';
+
 import ProjectForm from './Components/ProjectForm';
 
 
 function App() {
-const [project, setProject] = useState('');
+const [project, setProject] = useState(null);
 const [newForm, setNewForm] = useState(false);
 const [homePage, setHomePage] = useState(true);
 const [showCR, setShowCR] = useState(false);

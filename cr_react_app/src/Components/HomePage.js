@@ -1,4 +1,5 @@
-import {React, useEffect, useState} from 'react'
+import React from 'react';
+import {useEffect, useState} from 'react'
 import Dropdown from 'react-bootstrap/Dropdown';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -44,6 +45,8 @@ const HomePage = ({isHome, onNewForm, onShowCR}) => {
       setCreateForm(true);
     }
 
+    const onFileUpload = (data)=>(console.log(data))
+
 
   return (
     <div>
@@ -62,7 +65,7 @@ const HomePage = ({isHome, onNewForm, onShowCR}) => {
         </div>
         <br />
         {isHome && <Button onClick={onNewForm}> + Create New Project</Button>} <br></br><br></br>
-        <DatabaseOperations />
+        <DatabaseOperations onFileUpload={onFileUpload}/>
         </Container>}
     </div>
   )
