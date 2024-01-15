@@ -70,6 +70,13 @@
   z-index: 1000; /* Adjust the z-index as needed */
 }
 
+.modal-dialog{
+  max-width: 794px !important;
+  max-height: 1123px !important;
+  overflow-y: auto !important;
+  margin:auto !important;
+}
+
 .modal-dialog img {
   max-width: 90% !important;
   height: auto !important;

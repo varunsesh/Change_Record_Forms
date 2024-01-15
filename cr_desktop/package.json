@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "set ELECTRON_START_URL=http://localhost:3000 && electron .",
+    "postinstall": "electron-builder install-app-deps",
     "package": "electron-builder --win ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,11 +16,6 @@
     "directories": {
       "output": "dist"
     },
-    "files": [
-      "build/**/*",
-      "node_modules/**/*",
-      "main.js"
-    ],
     "mac": {
       "target": "dmg"
     },

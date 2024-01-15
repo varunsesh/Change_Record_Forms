@@ -6,9 +6,17 @@ import "../styles.css";
 function PopupCard({ isOpen, data, onCancel }) {
   var styles = {
     root: {
-      width: "90% !important"
+      maxWidth: "794px", // Width of A4 sheet at 96 DPI
+      maxHeight: "1123px", // Height of A4 sheet at 96 DPI
+      margin: "auto", // Center the modal
+      overflowY: "auto" // Add scroll for overflow content
     },
+    modal: {
+      display: "block",
+      overflow: "hidden"
+    }
   }
+
 
   return (
     <div>
@@ -27,6 +35,7 @@ function PopupCard({ isOpen, data, onCancel }) {
 
           <Modal.Footer>
             <Button variant="secondary" onClick={onCancel}>Close</Button>
+            <Button variant="primary" >Print</Button>
           </Modal.Footer>
         </Modal>
       )}

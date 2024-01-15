@@ -45,7 +45,10 @@ const HomePage = ({isHome, onNewForm, onShowCR}) => {
       setCreateForm(true);
     }
 
-    const onFileUpload = (data)=>(console.log(data))
+    const onFileUpload = (data)=>{
+      if(data) alert("File upload successful");
+      console.log(data);
+    }
 
 
   return (

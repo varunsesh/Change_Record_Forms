@@ -14,7 +14,7 @@ const oauthSignIn = () => {
     var params = {'client_id': '796241027558-5bkvdj00iila9vaa17v3sugsg8gahm8p.apps.googleusercontent.com',
                   'redirect_uri': 'http://localhost:3000/',
                   'response_type': 'token',
-                  'scope': 'https://www.googleapis.com/auth/drive.file',
+                  'scope': 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata https://www.googleapis.com/auth/drive',
                   'include_granted_scopes': 'true',
                   'state': 'pass-through value'};
   

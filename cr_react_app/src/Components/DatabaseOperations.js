@@ -41,24 +41,30 @@ function DatabaseOperations({onFileUpload}) {
         }
     }
     if (authToken && fileToUpload) {
-      uploadFileToGoogleDrive(authToken, fileToUpload)
+      uploadFileToGoogleDrive(authToken, fileToUpload, driveLink)
+      onFileUpload(true);
       // Reset or handle the fileToUpload state as necessary
       setFileToUpload(null);
+      onFileUpload(false);
     }
   }, [authToken, fileToUpload])
 
 
 
-  async function uploadFileToGoogleDrive(token, file) {
+  async function uploadFileToGoogleDrive(token, file, driveLink) {
+    const folderId = driveLink.match(/[-\w]{25,}/);
+    
     const metadata = {
         'name': file.name, // file name
-        'mimeType': file.type // file MIME type
+        'mimeType': file.type, 
+        'parents':[folderId] // file MIME type
     };
   
     // Form the body of the request
     const formData = new FormData();
-    formData.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
+    formData.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json', charset:'UTF-8'}));
     formData.append('file', file);
+    console.log(formData);
   
     try {
       const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
@@ -66,7 +72,6 @@ function DatabaseOperations({onFileUpload}) {
           headers: new Headers({ 'Authorization': 'Bearer ' + token }),
           body: formData
       });
-      onFileUpload(true);
       const result = await response.json();
       console.log(response);
       
