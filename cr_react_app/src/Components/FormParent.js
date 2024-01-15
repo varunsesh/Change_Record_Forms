@@ -1,33 +1,37 @@
-import React, { Component } from 'react'
-import FormSubmit  from './FormSubmit';
-import FormView from './FormView';
+import React, { Component, useState, useEffect } from 'react'
+import ChangeRecordForm  from './ChangeRecordForm';
+import ChangeRecordsTable from './ChangeRecordsTable';
+import { getProjects } from '../DbStores/models_new'; // Import functions from models.js
 
 
-export class FormParent extends Component {
-    constructor(props) {
-      super(props)
+function FormParent ({selectedProjectID}) {
+  const [pjt, setPjt] = useState(null);
+
+  useEffect(()=>{
     
-      this.state = {
-         formSubmitted:false
+    const fetchProjects = async () => {
+      try {
+         const projects = await getProjects();
+         setPjt(projects[selectedProjectID-1].project_name);
+      
+      } catch (error) {
+        console.error('Error fetching projects:', error);
       }
-    }
+    };
+    
+    fetchProjects();
+    console.log("Form Parent data");
+    console.log(selectedProjectID);
+    
+  }, [selectedProjectID, pjt])
 
-    handleSubmit = (e)=>{
-        this.setState(prevState=>(
-            {formSubmitted:!prevState.formSubmitted}
-        ), ()=>{console.log`state = ${this.state.formSubmitted}`})
-        const res = e.target.result;
-        console.log(`result from parent = ${res}`);
-    }
-
-  render() {
     return (
       <div>
-        <FormSubmit onFormSubmit={this.handleSubmit}/>
-        <FormView formSubmitted={this.state.formSubmitted}/>
+        <ChangeRecordForm pid={selectedProjectID} pjtName={pjt} />
+        <ChangeRecordsTable pid={selectedProjectID}/>
     </div>
     )
-  }
+  
 }
 
 export default FormParent;

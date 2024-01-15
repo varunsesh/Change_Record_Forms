@@ -6,7 +6,7 @@ const isDev = app.isPackaged ? false : require('electron-is-dev');
 
 const createWindow = () => {
     const startUrl =  isDev ? process.env.ELECTRON_START_URL : 
-                              `file://${path.join(__dirname, "./build/index.html")}`;
+                              `file://${path.join(__dirname, "./static/index.html")}`;
       mainWindow = new BrowserWindow({ 
         width: 800, 
         height: 600,

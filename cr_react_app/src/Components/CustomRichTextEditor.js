@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import ReactQuill, {Quill} from 'react-quill';
 import ImageUploader from "quill-image-uploader";
 import 'react-quill/dist/quill.snow.css'; // Import the styles for the editor
@@ -7,37 +7,16 @@ import { resizeFile } from 'react-image-file-resizer';
 import Button from 'react-bootstrap/Button'
 
 
-function CustomRichTextEditor({ onContentChange, onClose, data, editMode }) {
+function CustomRichTextEditor({ onContentChange, isReset }) {
   const [editorHtml, setEditorHtml] = useState('');
   const [base64Images, setBase64Images] = useState([]);
 
+  useEffect (()=>{
+    if(isReset){setEditorHtml("");isReset=false;}
+    onContentChange(editorHtml, isReset);
   
-  const showData = ()=>{
-    console.log("Update component");
-    console.log(editMode);
-    const summary = editMode ? data.summary:"";
-    //console.log(data.summary);
-    setEditorHtml(summary);
-  }
+  }, [editorHtml, isReset]);
   
-  const handleEditorChange = (html) => {
-    console.log("Edit Mode " + editMode);
-    // console.log(html);
-    
-    {
-      setEditorHtml(html);
-      if(editMode){
-        onContentChange(html, data.id);
-      }
-      else{
-        onContentChange(html);
-      }
-      
-    }
-    
-    
-  };
-
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -61,7 +40,7 @@ function CustomRichTextEditor({ onContentChange, onClose, data, editMode }) {
     "indent",
     "link",
     "image",
-    "imageBlot" // #5 Optinal if using custom formats
+    "imageBlot" // #5 Optional if using custom formats
   ];
 
   const modules = {
@@ -82,15 +61,12 @@ function CustomRichTextEditor({ onContentChange, onClose, data, editMode }) {
 
   return (
     <div className='custom-editor'>
-      <ReactQuill theme="snow" 
-        value={editorHtml}
-        onChange={handleEditorChange}
-        onFocus={showData}
-        modules={modules}
-        formats={formats}
+     <ReactQuill value={editorHtml} 
+      onChange={(value)=>setEditorHtml(value)} 
+      modules={modules}
+      formats={formats}
       />
       <br></br>
-      {editMode && <Button onClick={onClose}>Update</Button>}
     </div>
   );
 }

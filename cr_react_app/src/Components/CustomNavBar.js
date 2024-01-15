@@ -2,38 +2,49 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { getProjects } from '../DbStores/models_new'; // Import functions from models.js
 import React, { useEffect, useState } from 'react';
 
-function BasicExample(props) {
-  const [label, setLabel]=useState('');
-  
-  useEffect(()=>{
-    setLabel("Pristine Connect");
-  })
+//import { Link } from 'react-router-dom';
 
-  const handleClick = (e)=>{
-    console.log(label);
+function NavBar({props, onSelect, goHome}) {
+  const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState('');
+
+ useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projects = await getProjects();
+        setProjects(projects);
+        if (projects.length > 0) {
+          setSelectedProject(projects[0].project_name);
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+
+  const handleChange = (project) =>{
+    onSelect(project.project_id.toString());
+    console.log(project);
+    setSelectedProject(project.project_name);
   }
 
-  const goHome = ()=>{
-    props.setPjt(false);
-  }
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar  expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="#home" onClick={goHome}>Change Record Form</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <NavDropdown title="Project" id="basic-nav-dropdown">
-              <NavDropdown.Item onClick={handleClick}>{label}</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Project 2</NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
+        <center><Navbar.Toggle aria-controls="basic-navbar-nav" /> 
+        <NavDropdown title="Switch Project" id="basic-nav-dropdown">
+          {projects && projects.map((project)=><NavDropdown.Item key={project.project_id} onClick={()=>handleChange(project)}>{project.project_name}</NavDropdown.Item>)}
+          </NavDropdown></center>
       </Container>
     </Navbar>
   );
 }
 
-export default BasicExample;
+export default NavBar;

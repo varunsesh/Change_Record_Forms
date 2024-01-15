@@ -1,28 +1,53 @@
 import logo from './logo.svg';
 import './App.css';
-import {Title} from './Components/TitleManager'
 import FormParent from './Components/FormParent';
-import BasicExample from './Components/CustomNavBar';
+import NavBar from './Components/CustomNavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from './Components/HomePage';
-import { useState } from 'react';
+import React, {useState} from 'react';
+
+import ProjectForm from './Components/ProjectForm';
 
 
 function App() {
-  const [pjt, setPjt] = useState(false);
+const [project, setProject] = useState(null);
+const [newForm, setNewForm] = useState(false);
+const [homePage, setHomePage] = useState(true);
+const [showCR, setShowCR] = useState(false);
+
+
+
+
+
+const onNewForm = (e)=>{
+  setHomePage(false);
+  setNewForm(true);
+  setShowCR(false);
+}
+
+const onProjectAdd = (e)=>{
+  setHomePage(true);
+  setNewForm(false);
+  setShowCR(false);
+}
+
+const onShowCR = (e) => {
+  console.log(e);
+  setProject(parseInt(e));
+  setShowCR(true);
+  setHomePage(false);
+  
+}
 
 
 
   return (
     <div className="App">
-      {/* <BasicExample setPjt={setPjt}/>
-      {(!pjt) &&
-      <HomePage setPjt={setPjt}/>
-      } */}
-      <br />
-      {/* {(pjt)&& */}
-      <center><FormParent /></center>
-      {/* } */}
+    
+    <NavBar goHome={onProjectAdd} onSelect={onShowCR} isHome={homePage}></NavBar>
+    <HomePage onShowCR={onShowCR} onNewForm={onNewForm} isHome={homePage}/>
+    {newForm && <ProjectForm onProjectAdd={onProjectAdd} /> }
+    { showCR && <FormParent selectedProjectID={project}/>}
     </div>
   );
 }
