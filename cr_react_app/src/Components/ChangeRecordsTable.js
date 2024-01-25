@@ -5,7 +5,7 @@ import "../styles.css";
 import DropdownMenu from "./Dropdown";
 import PopupCard from './PopupCard';
 import EditModal from './EditModal.js';
-import {Container, Row, Col, Button, Table } from 'react-bootstrap';
+import {Container, Row, Col, Button, Table, Dropdown } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -44,7 +44,29 @@ function ChangeRecordsTable(props) {
     }
   }, [props.pid, records]); // Dependency on props.pid
   
-  
+  const handleStatusChange = (status, record, index) => {
+    const updatedRecords = [...records];
+    updatedRecords[index] = { ...updatedRecords[index], crStatus: status.value };
+    setRecords(updatedRecords);
+    // Update the status in your database if necessary
+    updateStatus(record, status.value);
+    
+  };
+
+  const statusStyles = [
+    {value:"Production", backgroundColor: 'green' },
+    {value:"UAT", backgroundColor: 'orange' },
+    {value:"Dev", backgroundColor: 'lightyellow' },
+    {value:"Awating Approval Pristine", backgroundColor: 'lightgreen' },
+    {value:"Discarded", backgroundColor: 'red' }
+    // Add more statuses and colors as needed
+  ];
+
+  const getStatusStyle = (status) => {
+    const styleObj = statusStyles.find(s => s.value === status);
+    return styleObj ? { backgroundColor: styleObj.backgroundColor } : {};
+  };
+
 
   const handleClick = (record)=>{
     console.log(record);
@@ -188,7 +210,6 @@ function ChangeRecordsTable(props) {
           <th>Name</th>
           <th>Title</th>
           <th>Status</th>
-          <th>Update Status</th>
           <th>Estimated Uat Date</th>
           <th>Actions</th>
         </tr>
@@ -199,8 +220,18 @@ function ChangeRecordsTable(props) {
             <td><div className='row-clickable' onClick={()=>handleClick(record)}>{record.cr_id}</div></td>
             <td>{record.requester_name}</td>
             <td>{record.title}</td>
-            <td><div>{record.crStatus}</div></td>
-            <td><DropdownMenu onItemSelected={(menuItem)=>updateStatus(record, menuItem)}/></td>
+            <td style={getStatusStyle(record.crStatus)}>
+            <Dropdown>
+                <Dropdown.Toggle variant="light" id="dropdown-basic">
+                  {record.crStatus}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  {statusStyles.map((status)=><Dropdown.Item key={status.value} onClick={()=>handleStatusChange(status, record, index)}>{status.value}</Dropdown.Item>)}               
+                </Dropdown.Menu>
+              </Dropdown>
+            </td>
+            
             <td>
               <DatePicker  
               showIcon
