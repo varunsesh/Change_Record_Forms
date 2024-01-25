@@ -57,7 +57,7 @@ function DatabaseOperations({onFileUpload}) {
     const metadata = {
         'name': file.name, // file name
         'mimeType': file.type, 
-        'parents':[folderId] // file MIME type
+        // 'parents':[folderId] // file MIME type
     };
   
     // Form the body of the request

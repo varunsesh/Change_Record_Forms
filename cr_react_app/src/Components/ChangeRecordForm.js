@@ -25,8 +25,9 @@ function ChangeRecordForm(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(event);
     console.log(selectedProject);
-
+ 
     const newRecord = {
       project_id: selectedProject,
       requester_name: requesterName,
@@ -39,9 +40,11 @@ function ChangeRecordForm(props) {
       await createChangeRecord(newRecord);
       alert('Change record added successfully');
       // Reset form fields
-      setRequesterName('');
-      setTitle('');
+      setRequesterName("");
+      setTitle("");
       setReset(true);
+      event.target[0].value="";
+      event.target[1].value="";
     } catch (error) {
       console.error('Error adding change record:', error);
     }

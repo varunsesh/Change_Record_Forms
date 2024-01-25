@@ -4,7 +4,12 @@ import ImageUploader from "quill-image-uploader";
 import 'react-quill/dist/quill.snow.css'; // Import the styles for the editor
 import '../styles.css' ;
 import { resizeFile } from 'react-image-file-resizer';
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
+import Table from 'quill-table'; // Importing the table module
+
+Quill.register({
+  'modules/table': Table,
+}, true);
 
 
 function CustomRichTextEditor({ onContentChange, isReset }) {
@@ -40,7 +45,8 @@ function CustomRichTextEditor({ onContentChange, isReset }) {
     "indent",
     "link",
     "image",
-    "imageBlot" // #5 Optional if using custom formats
+    "imageBlot", 
+    'table', 'table-row', 'table-cell' // #5 Optional if using custom formats
   ];
 
   const modules = {
@@ -55,7 +61,8 @@ function CustomRichTextEditor({ onContentChange, isReset }) {
         { indent: "+1" }
       ],
       ["link", "image"],
-      ["clean"]
+      ["clean"],
+      ['table'] 
     ],
   }
 

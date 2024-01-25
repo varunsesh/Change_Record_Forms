@@ -1,5 +1,5 @@
 const dbName = "CR_DB";
-const dbVersion = 10;
+const dbVersion = 11;
 const projectStoreName = "projects";
 const changeRecordStoreName = "changeRecords";
 
@@ -11,7 +11,7 @@ async function openDB() {
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
       db.createObjectStore(projectStoreName, { keyPath: "project_id", autoIncrement: true });
-      const changeRecordStore = db.createObjectStore(changeRecordStoreName, { autoIncrement: true });
+      const changeRecordStore = db.createObjectStore(changeRecordStoreName, { keyPath: "cr_id" });
       changeRecordStore.createIndex("project_id", "project_id", { unique: false });
     };
 
@@ -72,28 +72,35 @@ async function deleteProject(projectId) {
 
 // CRUD for Change Records
 async function createChangeRecord(recordData) {
-  // Get the highest CR ID for the given project
-  const highestCrId = await getHighestCrIdForProject(recordData.project_id);
-
-  var crInt = 0;
-  if (highestCrId != 0){
-    const parts = highestCrId.split('-'); // Split the string at the hyphen
-    crInt = parseInt(parts[1]);  
-  } 
-  const newCrId = crInt + 1;
-  
-  // Create a composite key (e.g., "project1-1")
-  const compoundKey = `${recordData.project_id}-${newCrId}`;
-  
-  // New record with compound key
-  const newRecord = { ...recordData, cr_id: compoundKey };
-
   const db = await openDB();
   const transaction = db.transaction(changeRecordStoreName, "readwrite");
   const store = transaction.objectStore(changeRecordStoreName);
 
+  // Retrieve all existing records for the given project
+  const allRecordsRequest = store.getAll();
+  const allRecords = await new Promise((resolve, reject) => {
+    allRecordsRequest.onsuccess = () => resolve(allRecordsRequest.result);
+    allRecordsRequest.onerror = () => reject(allRecordsRequest.error);
+  });
+
+  // Find the highest CR ID for the given project
+  const projectRecords = allRecords.filter(record => record.project_id === recordData.project_id);
+  let maxCrNumber = 0;
+  projectRecords.forEach(record => {
+    const parts = record.cr_id.split('-');
+    const crNumber = parseInt(parts[1]);
+    if (crNumber > maxCrNumber) {
+      maxCrNumber = crNumber;
+    }
+  });
+
+  // Create the new CR ID
+  const newCrId = `${recordData.project_id}-${maxCrNumber + 1}`;
+  const newRecord = { ...recordData, cr_id: newCrId };
+  console.log("New record being added:", newRecord);
+  
   return new Promise((resolve, reject) => {
-    const request = store.add(newRecord, compoundKey);
+    const request = store.add(newRecord);
     request.onsuccess = () => resolve("Change record added successfully");
     request.onerror = (event) => {
       reject("Error adding change record: " + event.target.error.message);
@@ -102,33 +109,6 @@ async function createChangeRecord(recordData) {
 }
 
 
-async function getHighestCrIdForProject(projectId) {
-  const db = await openDB();
-  const transaction = db.transaction(changeRecordStoreName, "readonly");
-  const store = transaction.objectStore(changeRecordStoreName);
-  const index = store.index("project_id");
-  
-  return new Promise((resolve, reject) => {
-    let highestCrId = "";
-    const request = index.openCursor(IDBKeyRange.only(projectId), "next");
-    
-    request.onsuccess = (event) => {
-      const cursor = event.target.result;
-      
-      if (cursor) {
-        highestCrId = cursor.value.cr_id;
-        
-        cursor.continue();
-      } else {
-        resolve(highestCrId);
-      }
-    };
-
-    request.onerror = (event) => {
-      reject(`Error in getting highest CR ID: ${event.target.errorCode}`);
-    };
-  });
-}
 
 
 
@@ -160,23 +140,28 @@ async function updateChangeRecord(recordId, updateData) {
   const db = await openDB();
   const transaction = db.transaction(changeRecordStoreName, "readwrite");
   const store = transaction.objectStore(changeRecordStoreName);
+  console.log(recordId);
   return new Promise((resolve, reject) => {
     // Fetch the record first to ensure it exists
     const getRequest = store.get(recordId);
-    
+
     getRequest.onsuccess = () => {
       if (getRequest.result) {
         // Record exists, update it
-        const updatedRecord = { ...getRequest.result, ...updateData };
-        
-        const updateRequest = store.put(updatedRecord, recordId);
+        const updatedRecord = { 
+          ...getRequest.result, 
+          ...updateData,
+          date: updateData.date ? new Date(updateData.date).toISOString() : getRequest.result.date
+        };
+
+        const updateRequest = store.put(updatedRecord);
 
         updateRequest.onsuccess = () => resolve("Change record updated successfully");
         updateRequest.onerror = () => reject("Error updating change record");
       } else {
         reject("Record not found for update");
       }
-          };
+    };
 
     getRequest.onerror = () => {
       reject("Error fetching record for update");

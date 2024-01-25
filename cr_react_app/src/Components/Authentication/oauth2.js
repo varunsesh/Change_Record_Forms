@@ -11,7 +11,7 @@ const oauthSignIn = () => {
     form.setAttribute('action', oauth2Endpoint);
   
     // Parameters to pass to OAuth 2.0 endpoint.
-    var params = {'client_id': '796241027558-5bkvdj00iila9vaa17v3sugsg8gahm8p.apps.googleusercontent.com',
+    var params = {'client_id': '796241027558-5oe7phmkfljm7upi9n9h5nbl45l24i1u.apps.googleusercontent.com',
                   'redirect_uri': 'http://localhost:3000/',
                   'response_type': 'token',
                   'scope': 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata https://www.googleapis.com/auth/drive',
